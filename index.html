@@ -255,7 +255,7 @@ function restoreSetup(){if(!location.hash.startsWith('#setup='))return;try{const
 function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function renderHistory(){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'), el=document.getElementById('history');
- el.innerHTML=arr.length?arr.map(x=>'<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" onclick="restoreQuote('+Number(x.id)+')">Load</button><button class="deleteQuote" onclick="deleteQuote('+Number(x.id)+')">Delete</button></div></div>').join(''):'<div class="small">No saved quotes yet.</div>';
+ el.innerHTML=arr.length?arr.map(x=>'<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" onclick="loadQuoteAndGo('+Number(x.id)+')">Load</button><button class="deleteQuote" onclick="deleteQuote('+Number(x.id)+')">Delete</button></div></div>').join(''):'<div class="small">No saved quotes yet.</div>';
 }
 function deleteQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
@@ -272,8 +272,7 @@ function newQuote(){
  document.getElementById('quoteText').textContent='Your customer-ready quote will appear here.';
  calculate(); updateTarget();
  document.getElementById('status').textContent='New quote ready.';
- setTimeout(()=>{const target=document.getElementById('calculator');if(target){const top=target.getBoundingClientRect().top+window.pageYOffset-20;window.scrollTo({top:top,behavior:'auto'});}},100);
- document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
+ setTimeout(()=>{const target=document.getElementById('calculatorForm');if(target){const top=target.getBoundingClientRect().top+window.pageYOffset-10;window.scrollTo({top:top,behavior:'auto'});}},100);
 }
 async function joinPro(e){
  e.preventDefault(); const status=document.getElementById('status'); status.textContent='Joining…';
@@ -282,7 +281,18 @@ async function joinPro(e){
 }
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));restoreSetup();renderHistory();calculate();updateTarget();
 </script>
-</body></htmlfunction restoreQuote(id){
+</body></htmlfunction loadQuoteAndGo(id){
+ restoreQuote(id);
+ setTimeout(()=>{
+  const form=document.getElementById('calculatorForm');
+  if(form){
+   const top=form.getBoundingClientRect().top+window.pageYOffset-10;
+   window.scrollTo({top:top,left:0,behavior:'auto'});
+   history.replaceState(null,'','#calculatorForm');
+  }
+ },120);
+}
+function restoreQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
  const x=arr.find(a=>a.id===id);
  if(!x)return;
@@ -323,6 +333,6 @@ async function joinPro(e){
  try{const r=await fetch('https://washquote.business-0f3.workers.dev/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
  catch(err){status.textContent=err.message||'Please try again.';}
 }
-ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
+ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));restoreSetup();renderHistory();calculate();updateTarget();
 </script>
 </body></html>
