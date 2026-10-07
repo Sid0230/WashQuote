@@ -7,7 +7,7 @@
 <meta name="keywords" content="pressure washing pricing calculator, pressure washing quote calculator, pressure washing profit calculator, pressure washing estimate calculator, driveway cleaning price calculator">
 <meta property="og:title" content="WashQuote — Pressure Washing Quote & Profit Calculator">
 <meta property="og:description" content="Calculate pressure washing job cost, protect your margin and create a customer-ready quote.">
-<meta property="og:type" content="website">
+<meta property="og:type" content="website"><link rel="canonical" href="https://washquote.swarivo.in/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"WashQuote","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Pressure washing quote, cost and profit calculator for service businesses.","offers":{"@type":"Offer","price":"9","priceCurrency":"USD"}}</script>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#dfe4ec;--accent:#1769e0;--accent2:#0f4fac;--good:#087443;--soft:#eef3fb;--danger:#b42318}
@@ -121,7 +121,7 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 <section class="section pro" id="pro">
 <h2>WashQuote Pro — early access</h2>
 <p>Starter handles the core calculation and individual quote. Pro is for the next problem: managing a growing quoting operation across customers, jobs and repeat work.</p>
-<p>Planned launch pricing is <b>$19 one-time</b> for the initial version, subject to validation. Payment is not enabled yet.</p>
+<p>Planned Pro pricing is <b>$19/month or $190/year</b> for the initial version, subject to validation. Payment is not enabled yet.</p>
 <div class="featuregrid" style="margin:16px 0">
 <div class="feature"><h3>Customer database</h3><p>Keep customer details, addresses and job history together instead of relying on separate browser records.</p></div>
 <div class="feature"><h3>Cloud quote history</h3><p>Access your customer and quote records across phone, tablet and computer.</p></div>
@@ -160,7 +160,7 @@ function vals(){
 }
 const sessionId=(()=>{let x=localStorage.getItem('wq_session_id');if(!x){x=crypto.randomUUID();localStorage.setItem('wq_session_id',x)}return x})();
 const attribution=(()=>{const q=new URLSearchParams(location.search),get=k=>(q.get(k)||'').trim().slice(0,120);let a=JSON.parse(localStorage.getItem('wq_attribution')||'null');const next={source:get('utm_source')||a?.source||'',medium:get('utm_medium')||a?.medium||'',campaign:get('utm_campaign')||a?.campaign||''};if(next.source||next.medium||next.campaign)localStorage.setItem('wq_attribution',JSON.stringify(next));return next})();
-function track(event_name){fetch((window.__HATCHABLE__?.api||'/api')+'/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_name,page:location.pathname,session_id:sessionId,...attribution})}).catch(()=>{})}
+function track(event_name){fetch('https://washquote-api.hatchable.site/api'+'/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_name,page:location.pathname,session_id:sessionId,...attribution})}).catch(()=>{})}
 function calculate(){
  const x=vals(); document.getElementById('min').textContent=money(x.base); document.getElementById('quotePrice').textContent=money(x.rec);
  document.getElementById('cost').textContent=money(x.base); document.getElementById('profit').textContent=money(x.profit); document.getElementById('profitMargin').textContent=x.pm.toFixed(1)+'%';
@@ -278,7 +278,7 @@ function restoreQuote(id){
 }
 async function joinPro(e){
  e.preventDefault(); const status=document.getElementById('status'); status.textContent='Joining…';
- try{const r=await fetch((window.__HATCHABLE__?.api||'/api')+'/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
+ try{const r=await fetch('https://washquote-api.hatchable.site/api'+'/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
  catch(err){status.textContent=err.message||'Please try again.';}
 }
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
