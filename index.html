@@ -91,9 +91,9 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 <div class="metric"><div class="k">Estimated profit</div><div class="v profit" id="profit">$0.00</div></div>
 <div class="metric"><div class="k">Profit margin</div><div class="v" id="profitMargin">0%</div></div>
 </div>
-<div class="actionSection"><div class="actionLabel">Quote actions</div><div class="actions"><button class="secondary" onclick="makeQuote()">Generate quote</button><button id="saveQuoteBtn" class="primaryAction" onclick="saveQuote()">Save quote</button></div><button class="newQuoteAction" style="width:100%;margin-top:10px" onclick="newQuote()">＋ New quote</button></div>
-<div class="actionSection"><div class="actionLabel">Copy & export</div><div class="actions"><button id="copyBtn" class="secondary" onclick="copyQuote()">Copy quote</button><button class="secondary" onclick="printQuote()">Print / PDF</button></div></div>
-<div class="actionSection"><div class="actionLabel">Send to customer</div><div class="actions"><button class="secondary" onclick="sendWhatsApp()">WhatsApp</button><button class="secondary" onclick="sendEmail()">Email</button></div><button class="secondary" style="width:50%;margin-top:10px" onclick="sendSMS()">SMS</button></div>
+<div class="actionSection"><div class="actionLabel">Quote actions</div><div class="actions"><button id="generateQuoteBtn" class="secondary" type="button">Generate quote</button><button id="saveQuoteBtn" class="primaryAction" type="button">Save quote</button></div><button id="newQuoteBtn" class="newQuoteAction" style="width:100%;margin-top:10px" type="button">＋ New quote</button></div>
+<div class="actionSection"><div class="actionLabel">Copy & export</div><div class="actions"><button id="copyBtn" class="secondary" type="button">Copy quote</button><button id="printQuoteBtn" class="secondary" type="button">Print / PDF</button></div></div>
+<div class="actionSection"><div class="actionLabel">Send to customer</div><div class="actions"><button id="whatsappBtn" class="secondary" type="button">WhatsApp</button><button id="emailBtn" class="secondary" type="button">Email</button></div><button id="smsBtn" class="secondary" style="width:50%;margin-top:10px" type="button">SMS</button></div>
 <div class="quote" id="quoteText">Your customer-ready quote will appear here.</div>
 <div class="notice">Planning estimate only. Check local taxes, fees, insurance, permits and business costs before sending a final price.</div>
 <div id="historyWrap" class="section"><h3>Saved quotes</h3><div id="history" class="history"><div class="small">No saved quotes yet.</div></div></div>
@@ -285,7 +285,16 @@ async function joinPro(e){
  try{const r=await fetch('https://washquote.business-0f3.workers.dev/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
  catch(err){status.textContent=err.message||'Please try again.';}
 }
-ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));restoreSetup();renderHistory();calculate();updateTarget();
+document.getElementById('generateQuoteBtn').addEventListener('click',makeQuote);
+document.getElementById('saveQuoteBtn').addEventListener('click',saveQuote);
+document.getElementById('newQuoteBtn').addEventListener('click',newQuote);
+document.getElementById('copyBtn').addEventListener('click',copyQuote);
+document.getElementById('printQuoteBtn').addEventListener('click',printQuote);
+document.getElementById('whatsappBtn').addEventListener('click',sendWhatsApp);
+document.getElementById('emailBtn').addEventListener('click',sendEmail);
+document.getElementById('smsBtn').addEventListener('click',sendSMS);
+ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));
+restoreSetup();renderHistory();calculate();updateTarget();
 </script>
 </body></htmlfunction loadQuoteAndGo(id){
  restoreQuote(id);
