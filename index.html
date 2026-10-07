@@ -272,7 +272,7 @@ function newQuote(){
  document.getElementById('quoteText').textContent='Your customer-ready quote will appear here.';
  calculate(); updateTarget();
  document.getElementById('status').textContent='New quote ready.';
- setTimeout(()=>{const target=document.getElementById('calculator');if(target){target.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy({top:-8,behavior:'smooth'});}},50);
+ setTimeout(()=>{const target=document.getElementById('calculator');if(target){const top=target.getBoundingClientRect().top+window.pageYOffset-18;window.scrollTo({top,behavior:'smooth'});setTimeout(()=>{const first=document.getElementById('customer');if(first)first.focus({preventScroll:true});},450);}},80);
 }
 function restoreQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'),x=arr.find(a=>a.id===id); if(!x)return;
