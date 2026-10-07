@@ -1,0 +1,8 @@
+name = "washquote-api"
+main = "src/index.js"
+compatibility_date = "2026-10-07"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "washquote"
+database_id = "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
