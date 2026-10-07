@@ -257,7 +257,7 @@ function newQuote(){
  document.getElementById('quoteText').textContent='Your customer-ready quote will appear here.';
  calculate(); updateTarget();
  document.getElementById('status').textContent='New quote ready.';
- document.getElementById('calculator')?.scrollIntoView({behavior:'smooth',block:'start'});
+ setTimeout(()=>{const target=document.getElementById('calculator');if(target){target.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy({top:-8,behavior:'smooth'});}},50);
 }
 function restoreQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'),x=arr.find(a=>a.id===id); if(!x)return;
@@ -273,7 +273,7 @@ function restoreQuote(id){
  calculate(); makeQuote(); updateTarget();
  const saveBtn=document.getElementById('saveQuoteBtn');
  if(saveBtn)saveBtn.textContent='Update saved quote';
- document.getElementById('calculator')?.scrollIntoView({behavior:'smooth',block:'start'});
+ setTimeout(()=>{const target=document.getElementById('calculator');if(target){target.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy({top:-8,behavior:'smooth'});}},50);
  document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
 }
 async function joinPro(e){
