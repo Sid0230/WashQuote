@@ -1,0 +1,1 @@
+ALTER TABLE pro_waitlist ADD COLUMN IF NOT EXISTS primary_need text;
