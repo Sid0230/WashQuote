@@ -258,7 +258,7 @@ function renderHistory(){
  const el=document.getElementById('history');
  el.innerHTML=arr.length ? arr.map(x=>{
   const id=String(x.id).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-  return '<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" type="button" onclick="loadQuoteAndGo(\\''+id+'\\')">Load</button><button class="deleteQuote" type="button" onclick="deleteQuote(\\''+id+'\\')">Delete</button></div></div>';
+  return '<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" type="button" onclick="loadQuoteAndGo(\'+id+\')">Load</button><button class="deleteQuote" type="button" onclick="deleteQuote(\'+id+\')">Delete</button></div></div>';
  }).join('') : '<div class="small">No saved quotes yet.</div>';
 }
 function deleteQuote(id){
