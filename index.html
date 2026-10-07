@@ -282,4 +282,34 @@ async function joinPro(e){
 }
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
 </script>
+</body></htmlfunction restoreQuote(id){
+ const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'),x=arr.find(a=>a.id===id); if(!x)return;
+ loadedQuoteId=x.id;
+ if(x.inputs){
+  ids.forEach(id=>{if(x.inputs[id]!==undefined)document.getElementById(id).value=x.inputs[id]});
+ }else{
+  document.getElementById('customer').value=x.customer||'';
+  document.getElementById('type').value=x.type;
+  document.getElementById('cur').value=x.currencyCode?x.currencyCode+'|'+x.currency:(Array.from(document.getElementById('cur').options).find(o=>o.value.endsWith('|'+x.currency))?.value||document.getElementById('cur').value);
+  document.getElementById('hours').value=x.hours;
+ }
+ calculate(); makeQuote(); updateTarget();
+ const saveBtn=document.getElementById('saveQuoteBtn');
+ if(saveBtn)saveBtn.textContent='Update saved quote';
+ setTimeout(()=>{
+  const target=document.getElementById('calculator');
+  if(target){
+   const top=target.getBoundingClientRect().top+window.pageYOffset-20;
+   window.scrollTo({top:top,behavior:'auto'});
+  }
+ },100);
+ document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
+}
+async function joinPro(e){
+ e.preventDefault(); const status=document.getElementById('status'); status.textContent='Joining…';
+ try{const r=await fetch('https://washquote.business-0f3.workers.dev/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
+ catch(err){status.textContent=err.message||'Please try again.';}
+}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
+</script>
 </body></html>
