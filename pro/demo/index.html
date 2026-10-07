@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WashQuote Pro — Workflow Preview</title>
+<meta name="description" content="Preview the planned WashQuote Pro customer, quote pipeline and repeat quoting workflow.">
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#101828;--muted:#667085;--line:#dfe4ec;--blue:#1769e0;--blueSoft:#eef4ff;--green:#087443;--amber:#b54708}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);line-height:1.5}.wrap{max-width:1080px;margin:auto;padding:24px 20px 70px}
+.back{color:var(--blue);font-weight:750;text-decoration:none;font-size:14px}.hero{text-align:center;max-width:800px;margin:48px auto 40px}.eyebrow{display:inline-block;background:var(--blueSoft);color:var(--blue);padding:7px 11px;border-radius:999px;font-size:11px;font-weight:850;letter-spacing:.06em;text-transform:uppercase}.hero h1{font-size:clamp(40px,6vw,62px);line-height:1.02;letter-spacing:-.05em;margin:16px 0 12px}.hero p{font-size:18px;color:var(--muted);margin:0}.preview{background:#fff8e8;border:1px solid #fedf89;color:#7a4b00;border-radius:12px;padding:11px 14px;font-size:13px;margin:0 auto 22px;max-width:800px;text-align:center}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 28px rgba(16,24,40,.05)}.wide{grid-column:1/-1}.card h2{margin:0 0 5px;font-size:21px}.sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+.customer{display:flex;align-items:center;gap:12px;padding:13px;background:#f8fafc;border:1px solid var(--line);border-radius:12px}.avatar{width:42px;height:42px;border-radius:50%;background:var(--blueSoft);color:var(--blue);display:grid;place-items:center;font-weight:850}.customer b{display:block}.customer span{color:var(--muted);font-size:12px}.job{margin-top:12px;padding:14px;border:1px solid var(--line);border-radius:12px}.jobTop{display:flex;justify-content:space-between;gap:10px}.tag{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:#eaf7f0;color:var(--green)}.job p{margin:6px 0 0;color:var(--muted);font-size:13px}
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.stage{border:1px solid var(--line);border-radius:11px;padding:12px;background:#f8fafc}.stage b{font-size:13px}.stage span{display:block;color:var(--muted);font-size:12px;margin-top:4px}.stage.active{border-color:#9ec5ff;background:var(--blueSoft)}.count{font-size:24px;font-weight:850;margin-top:8px}
+.repeat{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}.repeat h3{margin:0 0 5px}.repeat p{color:var(--muted);margin:0;font-size:13px}.quoteBox{text-align:right}.quoteBox .amount{font-size:27px;font-weight:850}.quoteBox span{font-size:12px;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{padding:14px;border:1px solid var(--line);border-radius:12px}.metric b{display:block;font-size:23px}.metric span{font-size:12px;color:var(--muted)}
+.cta{text-align:center;margin-top:22px;background:#101828;color:#fff;border-radius:18px;padding:28px}.cta p{color:#d0d5dd}.cta a{display:inline-block;background:#fff;color:#101828;text-decoration:none;font-weight:800;padding:12px 18px;border-radius:10px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.pipeline{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr 1fr}.repeat{grid-template-columns:1fr}.quoteBox{text-align:left}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<a class="back" href="/pro/">← Back to WashQuote Pro</a>
+<section class="hero">
+<span class="eyebrow">Pro workflow preview</span>
+<h1>From quote calculator to business system.</h1>
+<p>See how Pro is designed to manage customers, repeat work, follow-up and quote performance after the initial calculation.</p>
+</section>
+
+<div class="preview"><b>Product preview:</b> these screens illustrate the planned paid Pro workflow. They are not the finished production application.</div>
+
+<section class="grid">
+<div class="card">
+<h2>Customer database</h2>
+<p class="sub">Keep the customer and their previous work together.</p>
+<div class="customer"><div class="avatar">JS</div><div><b>John Smith</b><span>14 Oak Street · 3 previous jobs</span></div></div>
+<div class="job"><div class="jobTop"><b>Latest house wash</b><span class="tag">Completed</span></div><p>$425 quote · $138 estimated profit · 32% margin</p></div>
+<div class="job"><div class="jobTop"><b>Next opportunity</b><span class="tag" style="background:#fff4e5;color:#b54708">Follow up</span></div><p>Driveway cleaning · suggested follow-up in 30 days</p></div>
+</div>
+
+<div class="card">
+<h2>Repeat quoting</h2>
+<p class="sub">Start from previous customer work instead of rebuilding the quote.</p>
+<div class="job"><div class="jobTop"><b>John Smith · Driveway cleaning</b><span class="tag">Draft</span></div><p>Previous price: $275 · New quote ready to review</p><div style="margin-top:14px"><b>Suggested quote</b><div style="font-size:28px;font-weight:850;color:var(--blue)">$295</div></div></div>
+</div>
+
+<div class="card wide">
+<h2>Quote pipeline</h2>
+<p class="sub">Know what happened after you sent the quote.</p>
+<div class="pipeline">
+<div class="stage"><b>Draft</b><span>Quotes being prepared</span><div class="count">4</div></div>
+<div class="stage active"><b>Sent</b><span>Waiting for customer</span><div class="count">7</div></div>
+<div class="stage"><b>Accepted</b><span>Won work</span><div class="count">5</div></div>
+<div class="stage"><b>Completed</b><span>Finished jobs</span><div class="count">12</div></div>
+<div class="stage"><b>Lost</b><span>Did not convert</span><div class="count">3</div></div>
+</div>
+</div>
+
+<div class="card wide">
+<h2>Business analytics</h2>
+<p class="sub">Understand whether your quoting is producing profitable work.</p>
+<div class="metrics">
+<div class="metric"><b>31</b><span>Quotes this month</span></div>
+<div class="metric"><b>62%</b><span>Quote win rate</span></div>
+<div class="metric"><b>$382</b><span>Average quote</span></div>
+<div class="metric"><b>34%</b><span>Average margin</span></div>
+</div>
+</div>
+</section>
+
+<section class="cta">
+<h2>That is the Pro difference.</h2>
+<p>Starter helps you calculate, quote and send. Pro is designed to help you manage what happens next.</p>
+<a href="/pro/">Join the Pro validation →</a>
+</section>
+</main>
+</body>
+</html>
