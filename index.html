@@ -297,9 +297,7 @@ ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate))
  }else{
   document.getElementById('customer').value=x.customer||'';
   document.getElementById('type').value=x.type||'Driveway cleaning';
-  if(x.currencyCode){
-   document.getElementById('cur').value=x.currencyCode+'|'+x.currency;
-  }
+  if(x.currencyCode) document.getElementById('cur').value=x.currencyCode+'|'+x.currency;
   document.getElementById('hours').value=x.hours||1;
  }
 
@@ -307,12 +305,16 @@ ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate))
  makeQuote();
 
  const saveBtn=document.getElementById('saveQuoteBtn');
- if(saveBtn)saveBtn.textContent='Update saved quote';
+ if(saveBtn) saveBtn.textContent='Update saved quote';
 
- // Use the browser's native anchor navigation as the primary navigation.
- history.replaceState(null,'','#calculatorForm');
- const form=document.getElementById('calculatorForm');
- if(form) form.scrollIntoView({behavior:'auto',block:'start'});
+ // Focus the first calculator field so the browser reliably returns to the loaded quote.
+ setTimeout(()=>{
+  const customer=document.getElementById('customer');
+  if(customer){
+   customer.focus();
+   customer.scrollIntoView({behavior:'auto',block:'center'});
+  }
+ },50);
 
  document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
 }
