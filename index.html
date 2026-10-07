@@ -52,7 +52,7 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 </section>
 
 <div class="grid" id="calculator">
-<section class="card">
+<section class="card" id="calculatorForm">
 <h2>Job pricing calculator</h2>
 <div class="row">
 <div class="field"><label>Customer name / job reference</label><input id="customer" type="text" maxlength="80" placeholder="e.g. John Smith or 14 Oak St"><div class="small">Used to keep saved quotes separated between customers.</div></div>
@@ -283,26 +283,37 @@ async function joinPro(e){
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
 </script>
 </body></htmlfunction restoreQuote(id){
- const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'),x=arr.find(a=>a.id===id); if(!x)return;
+ const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
+ const x=arr.find(a=>a.id===id);
+ if(!x)return;
  loadedQuoteId=x.id;
+
  if(x.inputs){
-  ids.forEach(id=>{if(x.inputs[id]!==undefined)document.getElementById(id).value=x.inputs[id]});
+  ids.forEach(id=>{
+   if(x.inputs[id]!==undefined) document.getElementById(id).value=x.inputs[id];
+  });
  }else{
   document.getElementById('customer').value=x.customer||'';
   document.getElementById('type').value=x.type;
-  document.getElementById('cur').value=x.currencyCode?x.currencyCode+'|'+x.currency:(Array.from(document.getElementById('cur').options).find(o=>o.value.endsWith('|'+x.currency))?.value||document.getElementById('cur').value);
+  document.getElementById('cur').value=x.currencyCode
+   ? x.currencyCode+'|'+x.currency
+   : (Array.from(document.getElementById('cur').options).find(o=>o.value.endsWith('|'+x.currency))?.value||document.getElementById('cur').value);
   document.getElementById('hours').value=x.hours;
  }
- calculate(); makeQuote(); updateTarget();
+
+ calculate();
+ makeQuote();
+
  const saveBtn=document.getElementById('saveQuoteBtn');
  if(saveBtn)saveBtn.textContent='Update saved quote';
- setTimeout(()=>{
-  const target=document.getElementById('calculator');
-  if(target){
-   const top=target.getBoundingClientRect().top+window.pageYOffset-20;
-   window.scrollTo({top:top,behavior:'auto'});
-  }
- },100);
+
+ // Return to the actual calculator form, not the results/history section.
+ const calculatorForm=document.getElementById('calculatorForm');
+ if(calculatorForm){
+  const top=calculatorForm.getBoundingClientRect().top+window.scrollY-16;
+  window.scrollTo(0,top);
+ }
+
  document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
 }
 async function joinPro(e){
