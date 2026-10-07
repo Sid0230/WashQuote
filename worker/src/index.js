@@ -55,7 +55,7 @@ export default {
     }
 
     const email = clean(body.email,200).trim().toLowerCase();
-    if (!/^\\S+@\\S+\\.\\S+$/.test(email)) return json({ok:false,error:"Enter a valid email address."},400);
+    if (!/^\S+@\S+\.\S+$/.test(email)) return json({ok:false,error:"Enter a valid email address."},400);
     const allowedNeeds = new Set(["pricing","quotes","packages","targets","customers","repeat","pipeline","analytics"]);
     const need = allowedNeeds.has(String(body.need)) ? String(body.need) : "pricing";
     await env.DB.prepare(
