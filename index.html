@@ -309,6 +309,11 @@ function restoreQuote(id){
  const form=document.getElementById('calculatorForm');
  if(form) form.scrollIntoView({behavior:'auto',block:'start'});
 }
+function loadQuoteAndGo(id){
+ restoreQuote(id);
+ const form=document.getElementById('calculatorForm');
+ if(form) form.scrollIntoView({behavior:'auto',block:'start'});
+}
 document.getElementById('generateQuoteBtn').addEventListener('click',makeQuote);
 document.getElementById('saveQuoteBtn').addEventListener('click',saveQuote);
 document.getElementById('newQuoteBtn').addEventListener('click',newQuote);
@@ -320,22 +325,4 @@ document.getElementById('smsBtn').addEventListener('click',sendSMS);
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));
 restoreSetup();renderHistory();calculate();updateTarget();
 </script>
-</body></htmlfunction loadQuoteAndGo(id){
- restoreQuote(id);
- setTimeout(()=>{
-  const form=document.getElementById('calculatorForm');
-  if(form){
-   const top=form.getBoundingClientRect().top+window.pageYOffset-10;
-   window.scrollTo({top:top,left:0,behavior:'auto'});
-   history.replaceState(null,'','#calculatorForm');
-  }
- },120);
-}
-async function joinPro(e){
- e.preventDefault(); const status=document.getElementById('status'); status.textContent='Joining…';
- try{const r=await fetch('https://washquote.business-0f3.workers.dev/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
- catch(err){status.textContent=err.message||'Please try again.';}
-}
-ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));restoreSetup();renderHistory();calculate();updateTarget();
-</script>
-</body></html
+</body></html>
