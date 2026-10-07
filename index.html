@@ -281,7 +281,7 @@ function deleteQuote(id){
 }
 function newQuote(){
  loadedQuoteId=null;
- ids.forEach(id=>document.getElementById(id).value=id==='cur'?'USD|$':id==='type'?'Driveway':id==='hours'?'1':id==='workers'?'1':id==='labor'?'0':id==='materials'?'0':id==='travel'?'0':id==='other'?'0':id==='overhead'?'0':id==='margin'?'30':id==='fee'?'0':id==='minimum'?'0':document.getElementById(id).value);
+ ids.forEach(id=>document.getElementById(id).value=id==='cur'?'USD|$':id==='type'?'Driveway cleaning':id==='hours'?'1':id==='workers'?'1':id==='labor'?'0':id==='materials'?'0':id==='travel'?'0':id==='other'?'0':id==='overhead'?'0':id==='margin'?'30':id==='fee'?'0':id==='minimum'?'0':document.getElementById(id).value);
  document.getElementById('customer').value='';
  document.getElementById('saveQuoteBtn').textContent='Save quote';
  document.getElementById('quoteText').textContent='Your customer-ready quote will appear here.';
