@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WashQuote — Pressure Washing Quote & Profit Calculator</title>
+<meta name="description" content="Paid pressure washing quote calculator. Calculate labor, materials, travel, overhead, taxes, fees and target profit, then create a customer-ready estimate.">
+<meta name="keywords" content="pressure washing pricing calculator, pressure washing quote calculator, pressure washing profit calculator, pressure washing estimate calculator, driveway cleaning price calculator">
+<meta property="og:title" content="WashQuote — Pressure Washing Quote & Profit Calculator">
+<meta property="og:description" content="Calculate pressure washing job cost, protect your margin and create a customer-ready quote.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"WashQuote","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Pressure washing quote, cost and profit calculator for service businesses.","offers":{"@type":"Offer","price":"9","priceCurrency":"USD"}}</script>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#dfe4ec;--accent:#1769e0;--accent2:#0f4fac;--good:#087443;--soft:#eef3fb;--danger:#b42318}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
+.wrap{max-width:1120px;margin:auto;padding:24px 18px 70px}.hero{padding:34px 0 24px}.brand{font-weight:850;letter-spacing:.04em;font-size:20px;color:var(--accent)}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.02;letter-spacing:-.05em;margin:16px 0 12px;max-width:800px}.hero p{font-size:18px;color:var(--muted);max-width:760px;line-height:1.55}
+.topnav{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.pill{padding:9px 12px;border:1px solid var(--line);border-radius:99px;background:#fff;color:var(--muted);font-size:13px;text-decoration:none}
+.grid{display:grid;grid-template-columns:1.12fr .88fr;gap:18px}@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 30px rgba(20,30,50,.05)}
+h2{margin:0 0 18px;font-size:21px}h3{margin:0 0 8px;font-size:17px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.row{grid-template-columns:1fr}}
+label{display:block;font-size:13px;font-weight:700;margin:0 0 7px}input,select,textarea{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}input:focus,select:focus{outline:3px solid #dbeafe;border-color:var(--accent)}.field{margin-bottom:14px}
+.small{font-size:12px;color:var(--muted);margin-top:5px}.results{display:grid;gap:10px}.metric{padding:15px;border:1px solid var(--line);border-radius:12px}.metric .k{font-size:12px;color:var(--muted)}.metric .v{font-size:25px;font-weight:850;margin-top:3px}.primary{color:var(--accent)}.profit{color:var(--good)}
+button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inherit;cursor:pointer}.btn{background:var(--accent);color:#fff;width:100%;margin-top:5px}.btn:hover{background:var(--accent2)}.secondary{background:var(--soft);color:var(--accent);margin-top:10px;width:100%}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.primaryAction{background:var(--accent);color:#fff}.primaryAction:hover{background:var(--accent2)}.newQuoteAction{background:#fff;color:var(--ink);border:1px solid var(--line)}.newQuoteAction:hover{background:#f8fafc;border-color:#b9c6d8}.actionSection{margin-top:14px}.actionLabel{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}@media(max-width:560px){.actions{grid-template-columns:1fr}}
+.quote{white-space:pre-wrap;background:#f8fafc;border:1px dashed #cfd7e3;border-radius:12px;padding:14px;line-height:1.5;font-size:14px;min-height:175px;margin-top:12px}
+.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eaf7f0;color:var(--good);font-size:12px;font-weight:750;margin-bottom:10px}.notice{padding:12px;border-radius:10px;background:#fff8e8;color:#7a4b00;font-size:12px;line-height:1.45;margin-top:12px}
+.section{margin-top:18px}.featuregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:700px){.featuregrid{grid-template-columns:1fr}}.feature{padding:17px;border:1px solid var(--line);border-radius:14px;background:#fff}.feature p,.faq p{color:var(--muted);line-height:1.55;font-size:14px}
+.history{display:grid;gap:8px;margin-top:12px}.history .historyItem{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:11px}.history .historyInfo{min-width:0}.history .historyInfo b{display:block}.history .historyInfo span{display:block;color:var(--muted);font-size:12px;margin-top:3px}.history .historyActions{display:flex;gap:6px}.history .historyActions button{padding:8px 10px;background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:8px}.history .historyActions .loadQuote{color:var(--accent);font-weight:750}.history .historyActions .deleteQuote{color:var(--danger)}
+.pro{background:#101828;color:#fff;border-radius:18px;padding:24px}.pro p{color:#d0d5dd;line-height:1.5}.pro .feature{background:#fff;color:var(--ink);border-color:#dfe4ec}.pro .feature h3{color:var(--ink)}.pro .feature p{color:var(--muted);line-height:1.55}.pro form{display:flex;gap:8px}@media(max-width:560px){.pro form{flex-direction:column}}.pro input{border:0}.pro button{background:#fff;color:#101828}.proLinks{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px}.proLinks a{display:inline-block;padding:10px 13px;border-radius:9px;background:#1f2937;color:#fff;text-decoration:none;font-size:13px;font-weight:750}.status{font-size:12px;margin-top:8px;min-height:18px}
+.footer{margin-top:26px;text-align:center;color:var(--muted);font-size:12px;line-height:1.5}.printDocument{display:none}
+@media print{
+ @page{margin:0.5in}
+ html,body{background:#fff!important;color:#111!important;margin:0!important;padding:0!important}
+ body>main.wrap{display:block!important;max-width:none!important;margin:0!important;padding:0!important}
+ body>main.wrap>*{display:none!important}
+ body>main.wrap>#printDocument{display:block!important;box-sizing:border-box;width:100%;max-width:760px;margin:0 auto;padding:18px 24px;font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff}
+ #printDocument .printBrand{font-size:24px;font-weight:800;letter-spacing:.04em;margin:0 0 8px}
+ #printDocument .printTitle{font-size:13px;font-weight:700;letter-spacing:.04em;margin:0 0 22px;color:#344054}
+ #printDocument .printMeta{font-size:14px;margin:0 0 18px}
+ #printDocument .printTotal{font-size:28px;font-weight:800;margin:22px 0}
+ #printDocument .printBody{white-space:pre-wrap;font-size:15px;line-height:1.7}
+ #printDocument .printFooter{margin-top:30px;padding-top:14px;border-top:1px solid #ddd;font-size:12px;color:#667085}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+<div class="brand">WASHQUOTE</div>
+<h1>Price pressure washing jobs with confidence.</h1>
+<p>Calculate your real job cost, protect your target margin, and create a customer-ready quote in seconds. Built for pressure washing businesses worldwide.</p>
+<nav class="topnav"><a class="pill" href="#calculator">Calculator</a><a class="pill" href="#features">Features</a><a class="pill" href="#faq">FAQ</a><a class="pill" href="/pro/">See Pro</a></nav>
+</section>
+
+<div class="grid" id="calculator">
+<section class="card">
+<h2>Job pricing calculator</h2>
+<div class="row">
+<div class="field"><label>Customer name / job reference</label><input id="customer" type="text" maxlength="80" placeholder="e.g. John Smith or 14 Oak St"><div class="small">Used to keep saved quotes separated between customers.</div></div>
+<div class="field"><label>Currency</label><select id="cur"><option value="USD|$">USD — US Dollar ($)</option><option value="EUR|€">EUR — Euro (€)</option><option value="GBP|£">GBP — British Pound (£)</option><option value="CAD|C$">CAD — Canadian Dollar (C$)</option><option value="AUD|A$">AUD — Australian Dollar (A$)</option><option value="NZD|NZ$">NZD — New Zealand Dollar (NZ$)</option><option value="INR|₹">INR — Indian Rupee (₹)</option><option value="SGD|S$">SGD — Singapore Dollar (S$)</option><option value="AED|د.إ">AED — UAE Dirham (د.إ)</option><option value="ZAR|R">ZAR — South African Rand (R)</option><option value="CHF|CHF">CHF — Swiss Franc (CHF)</option><option value="JPY|¥">JPY — Japanese Yen (¥)</option></select></div>
+<div class="field"><label>Job type</label><select id="type"><option>Driveway cleaning</option><option>House wash</option><option>Roof wash</option><option>Deck / patio</option><option>Commercial</option><option>Other</option></select></div>
+</div>
+<div class="row">
+<div class="field"><label>Estimated hours</label><input id="hours" type="number" min="0" step=".25" value="2"></div>
+<div class="field"><label>Workers</label><input id="workers" type="number" min="1" step="1" value="1"></div>
+</div>
+<div class="row">
+<div class="field"><label>Labor cost / worker / hour</label><input id="labor" type="number" min="0" step=".01" value="25"></div>
+<div class="field"><label>Materials / chemicals</label><input id="materials" type="number" min="0" step=".01" value="15"></div>
+</div>
+<div class="row">
+<div class="field"><label>Travel / fuel</label><input id="travel" type="number" min="0" step=".01" value="10"></div>
+<div class="field"><label>Other job costs</label><input id="other" type="number" min="0" step=".01" value="0"></div>
+</div>
+<div class="row">
+<div class="field"><label>Overhead allocation</label><input id="overhead" type="number" min="0" step=".01" value="10"><div class="small">Insurance, equipment, software, admin, etc.</div></div>
+<div class="field"><label>Target profit margin %</label><input id="margin" type="number" min="0" max="90" step="1" value="30"></div>
+</div>
+<div class="row">
+<div class="field"><label>Tax / fee buffer %</label><input id="fee" type="number" min="0" max="30" step=".5" value="0"><div class="small">Optional buffer for taxes or payment/platform fees.</div></div>
+<div class="field"><label>Minimum job charge</label><input id="minimum" type="number" min="0" step=".01" value="0"><div class="small">Optional floor for small jobs.</div></div>
+</div>
+<button class="btn" onclick="calculate()">Calculate my quote</button>
+</section>
+
+<section class="card printable">
+<span class="badge">Instant calculation</span><h2>Your numbers</h2>
+<div class="results">
+<div class="metric"><div class="k">Recommended customer quote</div><div class="v primary" id="quotePrice">$0.00</div></div>
+<div class="metric"><div class="k">Break-even price (before target margin)</div><div class="v" id="min">$0.00</div></div>
+<div class="metric"><div class="k">Estimated job cost</div><div class="v" id="cost">$0.00</div></div>
+<div class="metric"><div class="k">Estimated profit</div><div class="v profit" id="profit">$0.00</div></div>
+<div class="metric"><div class="k">Profit margin</div><div class="v" id="profitMargin">0%</div></div>
+</div>
+<div class="actionSection"><div class="actionLabel">Quote actions</div><div class="actions"><button class="secondary" onclick="makeQuote()">Generate quote</button><button id="saveQuoteBtn" class="primaryAction" onclick="saveQuote()">Save quote</button></div><button class="newQuoteAction" style="width:100%;margin-top:10px" onclick="newQuote()">＋ New quote</button></div>
+<div class="actionSection"><div class="actionLabel">Copy & export</div><div class="actions"><button id="copyBtn" class="secondary" onclick="copyQuote()">Copy quote</button><button class="secondary" onclick="printQuote()">Print / PDF</button></div></div>
+<div class="actionSection"><div class="actionLabel">Send to customer</div><div class="actions"><button class="secondary" onclick="sendWhatsApp()">WhatsApp</button><button class="secondary" onclick="sendEmail()">Email</button></div><button class="secondary" style="width:50%;margin-top:10px" onclick="sendSMS()">SMS</button></div>
+<div class="quote" id="quoteText">Your customer-ready quote will appear here.</div>
+<div class="notice">Planning estimate only. Check local taxes, fees, insurance, permits and business costs before sending a final price.</div>
+<div id="historyWrap" class="section"><h3>Saved quotes</h3><div id="history" class="history"><div class="small">No saved quotes yet.</div></div></div>
+</section>
+</div>
+
+<section class="section" id="features">
+<div class="card"><h2>Built for the actual quoting problem</h2>
+<div class="featuregrid">
+<div class="feature"><h3>Start with cost</h3><p>Know what the job costs before deciding what to charge.</p></div>
+<div class="feature"><h3>Protect your margin</h3><p>See the job cost first, then calculate the customer price from your target profit margin.</p></div>
+<div class="feature"><h3>Include hidden costs</h3><p>Labor, chemicals, fuel, other costs, overhead and an optional tax/fee buffer are all visible.</p></div>
+<div class="feature"><h3>Close the quote faster</h3><p>Turn the calculation into a clean customer message, copy it, save it, or print it to PDF.</p></div>
+</div></div>
+</section>
+
+<!-- Starter tools removed -->
+
+<section class="section" id="cta">
+<div class="card"><h2>Choose your WashQuote plan</h2><div class="featuregrid"><div class="feature"><h3>Starter — $9/month</h3><p>Core paid quoting workflow: calculator, customer-ready quotes, saved quotes, print/PDF, sharing and basic pricing tools. <b>$79/year</b> option planned.</p></div><div class="feature"><h3>Pro</h3><p>Higher-value business layer: customers, cloud quote history, pipeline, repeat quoting and analytics.</p></div></div><h2 style="margin-top:22px">Ready to turn the calculation into a repeatable quoting system?</h2>
+<p class="small">Starter is currently being validated at $9/month or $79/year. If you quote regularly, see the planned Pro business layer.</p>
+<div class="actions"><button class="btn" onclick="location.href='/pro/'">Explore WashQuote Pro</button><button class="secondary" onclick="location.href='/pressure-washing-pricing-guide/'">Read pricing guide</button></div>
+</div></section>
+
+<section class="section pro" id="pro">
+<h2>WashQuote Pro — early access</h2>
+<p>Starter handles the core calculation and individual quote. Pro is for the next problem: managing a growing quoting operation across customers, jobs and repeat work.</p>
+<p>Planned launch pricing is <b>$19 one-time</b> for the initial version, subject to validation. Payment is not enabled yet.</p>
+<div class="featuregrid" style="margin:16px 0">
+<div class="feature"><h3>Customer database</h3><p>Keep customer details, addresses and job history together instead of relying on separate browser records.</p></div>
+<div class="feature"><h3>Cloud quote history</h3><p>Access your customer and quote records across phone, tablet and computer.</p></div>
+<div class="feature"><h3>Quote pipeline</h3><p>Track quotes from draft to sent, accepted, completed or lost.</p></div>
+<div class="feature"><h3>Repeat quoting</h3><p>Start from a customer's previous work and create the next quote without rebuilding the job from zero.</p></div>
+<div class="feature"><h3>Business analytics</h3><p>See quote volume, win rate, average quote, estimated profit and margin.</p></div>
+<div class="feature"><h3>Team-ready workflow</h3><p>Build toward shared customers, quotes and permissions when the business grows beyond one operator.</p></div>
+</div>
+<div class="proLinks"><a href="/pro/demo/">See Pro workflow preview →</a><a href="/pro/app/">Open Pro workspace →</a></div>
+<form onsubmit="joinPro(event)"><input id="email" type="email" required placeholder="you@business.com" aria-label="Email"><button type="submit">Join Pro beta</button></form>
+<div class="status" id="status"></div>
+</section>
+
+<section class="section" id="faq">
+<div class="card"><h2>Pressure washing pricing calculator FAQ</h2>
+<div class="faq"><h3>How should I price a pressure washing job?</h3><p>Start with your complete job cost, set your target profit margin, and use the result as your starting quote. Always consider local market conditions, job difficulty and your minimum charge.</p></div>
+<div class="faq"><h3>What does WashQuote calculate?</h3><p>WashQuote factors in labor, materials, travel, other job costs, overhead, target margin and applicable fees to help you create a customer-ready quote.</p></div>
+<div class="faq"><h3>Can I use WashQuote for different pressure washing services?</h3><p>Yes. Use it for driveways, house washing, roof washing, decks/patios, commercial work and other services.</p></div>
+<div class="faq"><h3>Is WashQuote free?</h3><p>WashQuote is a paid product. Starter is currently being validated at <b>$9/month or $79/year</b>, while Pro adds customer management, repeat quoting, quote pipeline and business analytics.</p></div>
+<div class="faq"><h3>What is the difference between Starter and Pro?</h3><p><b>Starter = calculate, quote and send.</b> Pro = manage customers, repeat work and the business behind the quotes.</p></div>
+<div class="faq"><h3>Does WashQuote guarantee the right price?</h3><p>No. It is a pricing and planning tool. Your final price should account for your local market, site conditions, regulations and actual business costs.</p></div>
+</div>
+</section>
+<section class="section"><div class="card" style="text-align:center"><h2>Ready to price your next job?</h2><p class="small">Use WashQuote Starter to calculate your costs, protect your margin and create a customer-ready quote.</p><div class="actions"><button class="btn" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">Start with Starter</button><button class="secondary" onclick="location.href='/pro/'">See WashQuote Pro</button></div></div></section>
+<div class="footer">WashQuote is a planning tool for pressure washing businesses. Starter and Pro are paid products; checkout is being validated before launch. Saved quotes are stored in your current browser.</div>
+<div id="printDocument" class="printDocument" aria-hidden="true"></div>
+</main>
+<script>
+const ids=['customer','cur','type','hours','workers','labor','materials','travel','other','overhead','margin','fee','minimum'];
+function n(id){return Math.max(0,Number(document.getElementById(id).value)||0)}
+function currencyParts(){const v=document.getElementById('cur').value.split('|');return {code:v[0],symbol:v[1]}} function money(x){const c=currencyParts();return c.symbol+Number(x).toFixed(2)}
+function vals(){
+ const h=n('hours'),w=Math.max(1,n('workers')),lc=n('labor'),m=n('materials'),t=n('travel'),o=n('other'),oh=n('overhead'),gm=Math.min(90,n('margin')),fee=Math.min(30,n('fee')),floor=n('minimum');
+ const base=h*w*lc+m+t+o+oh; const withMargin=base/(1-gm/100); const rec=Math.max(floor,withMargin/(1-fee/100));
+ return {h,w,base,rec,profit:rec-base,pm:rec?((rec-base)/rec*100):0,gm,fee,type:document.getElementById('type').value};
+}
+const sessionId=(()=>{let x=localStorage.getItem('wq_session_id');if(!x){x=crypto.randomUUID();localStorage.setItem('wq_session_id',x)}return x})();
+const attribution=(()=>{const q=new URLSearchParams(location.search),get=k=>(q.get(k)||'').trim().slice(0,120);let a=JSON.parse(localStorage.getItem('wq_attribution')||'null');const next={source:get('utm_source')||a?.source||'',medium:get('utm_medium')||a?.medium||'',campaign:get('utm_campaign')||a?.campaign||''};if(next.source||next.medium||next.campaign)localStorage.setItem('wq_attribution',JSON.stringify(next));return next})();
+function track(event_name){fetch((window.__HATCHABLE__?.api||'/api')+'/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_name,page:location.pathname,session_id:sessionId,...attribution})}).catch(()=>{})}
+function calculate(){
+ const x=vals(); document.getElementById('min').textContent=money(x.base); document.getElementById('quotePrice').textContent=money(x.rec);
+ document.getElementById('cost').textContent=money(x.base); document.getElementById('profit').textContent=money(x.profit); document.getElementById('profitMargin').textContent=x.pm.toFixed(1)+'%';
+ updateTarget();
+ track('calculator_used');
+}
+function makeQuote(){
+ const x=vals(); document.getElementById('quoteText').textContent='PRESSURE WASHING QUOTE\n\nService: '+x.type+'\nEstimated time: '+x.h+' hours\n\nTotal: '+money(x.rec)+'\n\nThis estimate covers the service described above. Final price may vary if job conditions differ materially from the information provided.\n\nThank you for your business!';
+ calculate(); track('quote_generated');
+}
+async function copyQuote(){
+ makeQuote();
+ const text=document.getElementById('quoteText').textContent;
+ try{
+  if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);}
+  else{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');ta.remove();}
+  const btn=document.getElementById('copyBtn');
+  if(btn){btn.textContent='✓ Copied!';setTimeout(()=>{btn.textContent='Copy quote';},1800);}
+  document.getElementById('status').textContent='Quote copied to clipboard.';
+ }catch(e){
+  const btn=document.getElementById('copyBtn');
+  if(btn){btn.textContent='Copy failed';setTimeout(()=>{btn.textContent='Copy quote';},1800);}
+  document.getElementById('status').textContent='Copy failed. Select the quote text and copy it manually.';
+ }
+}
+function customerMessage(){
+ makeQuote();
+ return document.getElementById('quoteText').textContent;
+}
+function sendWhatsApp(){
+ const text=encodeURIComponent(customerMessage());
+ window.open('https://wa.me/?text='+text,'_blank','noopener');
+}
+function sendEmail(){
+ const text=encodeURIComponent(customerMessage());
+ const subject=encodeURIComponent('Pressure washing quote');
+ window.location.href='mailto:?subject='+subject+'&body='+text;
+}
+function sendSMS(){
+ const text=encodeURIComponent(customerMessage());
+ window.location.href='sms:?body='+text;
+}
+function printQuote(){
+ makeQuote();
+ const x=vals();
+ const print=document.getElementById('printDocument');
+ if(print){
+  print.innerHTML='<div class="printBrand">WASHQUOTE</div><div class="printTitle">PRESSURE WASHING QUOTE</div><div class="printMeta"><b>Service:</b> '+x.type+'<br><b>Estimated time:</b> '+x.h+' hours</div><div class="printTotal">Total: '+money(x.rec)+'</div><div class="printBody">This estimate covers the service described above. Final price may vary if job conditions differ materially from the information provided.\n\nThank you for your business!</div><div class="printFooter">Prepared with WashQuote · Planning estimate</div>';
+ }
+ setTimeout(()=>window.print(),50);
+}
+let loadedQuoteId=null;
+function saveQuote(){
+ const x=vals(); const inputs=Object.fromEntries(ids.map(id=>[id,document.getElementById(id).value]));
+ const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
+ if(loadedQuoteId!==null){
+  const i=arr.findIndex(q=>q.id===loadedQuoteId);
+  if(i>=0){
+   arr[i]={...arr[i],customer:(document.getElementById('customer').value||'').trim(),type:x.type,total:x.rec,currency:currencyParts().symbol,currencyCode:currencyParts().code,hours:x.h,created:new Date().toLocaleString(),inputs};
+   localStorage.setItem('washquote_history',JSON.stringify(arr));
+   renderHistory(); track('quote_saved'); makeQuote();
+   document.getElementById('status').textContent='Saved quote updated.';
+   return;
+  }
+ }
+ const item={id:Date.now(),customer:(document.getElementById('customer').value||'').trim(),type:x.type,total:x.rec,currency:currencyParts().symbol,currencyCode:currencyParts().code,hours:x.h,created:new Date().toLocaleString(),inputs};
+ arr.unshift(item); localStorage.setItem('washquote_history',JSON.stringify(arr.slice(0,8))); renderHistory(); track('quote_saved'); makeQuote();
+ document.getElementById('status').textContent='Quote saved with all calculator inputs.';
+}
+const pricingIds=ids.filter(id=>id!=='customer');
+function savePreset(){localStorage.setItem('washquote_preset',JSON.stringify(Object.fromEntries(pricingIds.map(id=>[id,document.getElementById(id).value]))));document.getElementById('status').textContent='Pricing preset saved on this device. Customer details were not included.'}
+function loadPreset(){const p=JSON.parse(localStorage.getItem('washquote_preset')||'null');if(!p)return document.getElementById('status').textContent='No preset saved yet.';pricingIds.forEach(id=>{if(p[id]!==undefined)document.getElementById(id).value=p[id]});calculate();document.getElementById('status').textContent='Pricing preset loaded. Current customer stays unchanged.'}
+function updateTarget(){const target=n('monthlyTarget'),profit=vals().profit;const el=document.getElementById('jobsTarget');el.textContent=profit>0?Math.ceil(target/profit)+' jobs':'Calculate a quote first'}
+async function copyText(text){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);return true}const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}}
+async function shareSetup(){const data=Object.fromEntries(pricingIds.map(id=>[id,document.getElementById(id).value]));const url=location.origin+location.pathname+'#setup='+btoa(unescape(encodeURIComponent(JSON.stringify(data))));const ok=await copyText(url);document.getElementById('status').textContent=ok?'Setup link copied. Customer details were not included.':'Could not copy the setup link. Copy the URL from the address bar after opening it.';track('quote_saved')}
+function restoreSetup(){if(!location.hash.startsWith('#setup='))return;try{const data=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(7)))));pricingIds.forEach(id=>{if(data[id]!==undefined)document.getElementById(id).value=data[id]})}catch(e){}}
+function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function renderHistory(){
+ const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'), el=document.getElementById('history');
+ el.innerHTML=arr.length?arr.map(x=>'<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" onclick="restoreQuote('+Number(x.id)+')">Load</button><button class="deleteQuote" onclick="deleteQuote('+Number(x.id)+')">Delete</button></div></div>').join(''):'<div class="small">No saved quotes yet.</div>';
+}
+function deleteQuote(id){
+ const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
+ localStorage.setItem('washquote_history',JSON.stringify(arr.filter(x=>x.id!==id)));
+ if(loadedQuoteId===id){loadedQuoteId=null;const saveBtn=document.getElementById('saveQuoteBtn');if(saveBtn)saveBtn.textContent='Save quote';}
+ renderHistory();
+ document.getElementById('status').textContent='Saved quote deleted.';
+}
+function newQuote(){
+ loadedQuoteId=null;
+ ids.forEach(id=>document.getElementById(id).value=id==='cur'?'USD|$':id==='type'?'Driveway':id==='hours'?'1':id==='workers'?'1':id==='labor'?'0':id==='materials'?'0':id==='travel'?'0':id==='other'?'0':id==='overhead'?'0':id==='margin'?'30':id==='fee'?'0':id==='minimum'?'0':document.getElementById(id).value);
+ document.getElementById('customer').value='';
+ document.getElementById('saveQuoteBtn').textContent='Save quote';
+ document.getElementById('quoteText').textContent='Your customer-ready quote will appear here.';
+ calculate(); updateTarget();
+ document.getElementById('status').textContent='New quote ready.';
+ document.getElementById('calculator')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function restoreQuote(id){
+ const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'),x=arr.find(a=>a.id===id); if(!x)return;
+ loadedQuoteId=x.id;
+ if(x.inputs){
+  ids.forEach(id=>{if(x.inputs[id]!==undefined)document.getElementById(id).value=x.inputs[id]});
+ }else{
+  document.getElementById('customer').value=x.customer||'';
+  document.getElementById('type').value=x.type;
+  document.getElementById('cur').value=x.currencyCode?x.currencyCode+'|'+x.currency:(Array.from(document.getElementById('cur').options).find(o=>o.value.endsWith('|'+x.currency))?.value||document.getElementById('cur').value);
+  document.getElementById('hours').value=x.hours;
+ }
+ calculate(); makeQuote(); updateTarget();
+ const saveBtn=document.getElementById('saveQuoteBtn');
+ if(saveBtn)saveBtn.textContent='Update saved quote';
+ document.getElementById('calculator')?.scrollIntoView({behavior:'smooth',block:'start'});
+ document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
+}
+async function joinPro(e){
+ e.preventDefault(); const status=document.getElementById('status'); status.textContent='Joining…';
+ try{const r=await fetch((window.__HATCHABLE__?.api||'/api')+'/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
+ catch(err){status.textContent=err.message||'Please try again.';}
+}
+ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
+</script>
+</body></html>
