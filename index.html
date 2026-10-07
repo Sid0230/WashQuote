@@ -254,8 +254,14 @@ async function shareSetup(){const data=Object.fromEntries(pricingIds.map(id=>[id
 function restoreSetup(){if(!location.hash.startsWith('#setup='))return;try{const data=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(7)))));pricingIds.forEach(id=>{if(data[id]!==undefined)document.getElementById(id).value=data[id]})}catch(e){}}
 function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function renderHistory(){
- const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'), el=document.getElementById('history');
- el.innerHTML=arr.length?arr.map(x=>'<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" onclick="loadQuoteAndGo('+Number(x.id)+')">Load</button><button class="deleteQuote" onclick="deleteQuote('+Number(x.id)+')">Delete</button></div></div>').join(''):'<div class="small">No saved quotes yet.</div>';
+ const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
+ const el=document.getElementById('history');
+ el.innerHTML=arr.length
+  ? arr.map(x=>{
+    const id=String(x.id).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return '<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" onclick="loadQuoteAndGo(\\''+id+'\\')">Load</button><button class="deleteQuote" onclick="deleteQuote(\\''+id+'\\')">Delete</button></div></div>';
+   }).join('')
+  : '<div class="small">No saved quotes yet.</div>';
 }
 function deleteQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
