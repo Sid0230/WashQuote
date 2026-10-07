@@ -256,15 +256,26 @@ function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&'
 function renderHistory(){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
  const el=document.getElementById('history');
- el.innerHTML=arr.length ? arr.map(x=>{
-  const id=String(x.id).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-  return '<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" type="button" onclick="loadQuoteAndGo(\'+id+\')">Load</button><button class="deleteQuote" type="button" onclick="deleteQuote(\'+id+\')">Delete</button></div></div>';
- }).join('') : '<div class="small">No saved quotes yet.</div>';
+ if(!arr.length){
+  el.innerHTML='<div class="small">No saved quotes yet.</div>';
+  return;
+ }
+ el.innerHTML=arr.map(x=>{
+  const id=escapeHTML(String(x.id));
+  return '<div class="historyItem"><div class="historyInfo"><b>'+escapeHTML(x.customer||'Unnamed customer')+'</b><span>'+escapeHTML(x.type)+' — '+escapeHTML(x.currency)+Number(x.total).toFixed(2)+' · '+escapeHTML(x.hours)+' hrs · '+escapeHTML(x.created)+'</span></div><div class="historyActions"><button class="loadQuote" type="button" data-quote-id="'+id+'">Load</button><button class="deleteQuote" type="button" data-quote-id="'+id+'">Delete</button></div></div>';
+ }).join('');
+
+ el.querySelectorAll('.loadQuote').forEach(btn=>{
+  btn.addEventListener('click',()=>loadQuoteAndGo(btn.dataset.quoteId));
+ });
+ el.querySelectorAll('.deleteQuote').forEach(btn=>{
+  btn.addEventListener('click',()=>deleteQuote(btn.dataset.quoteId));
+ });
 }
 function deleteQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
  localStorage.setItem('washquote_history',JSON.stringify(arr.filter(x=>String(x.id)!==String(id))));
- if(loadedQuoteId===id){loadedQuoteId=null;const saveBtn=document.getElementById('saveQuoteBtn');if(saveBtn)saveBtn.textContent='Save quote';}
+ if(String(loadedQuoteId)===String(id)){loadedQuoteId=null;const saveBtn=document.getElementById('saveQuoteBtn');if(saveBtn)saveBtn.textContent='Save quote';}
  renderHistory();
  document.getElementById('status').textContent='Saved quote deleted.';
 }
