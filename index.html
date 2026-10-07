@@ -121,7 +121,7 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 <section class="section pro" id="pro">
 <h2>WashQuote Pro — early access</h2>
 <p>Starter handles the core calculation and individual quote. Pro is for the next problem: managing a growing quoting operation across customers, jobs and repeat work.</p>
-<p>Planned launch pricing is <b>$19 one-time</b> for the initial version, subject to validation. Payment is not enabled yet.</p>
+<p>Pro validation pricing is <b>$19/month or $190/year (2 months free)</b>. Payment is not enabled yet.</p>
 <div class="featuregrid" style="margin:16px 0">
 <div class="feature"><h3>Customer database</h3><p>Keep customer details, addresses and job history together instead of relying on separate browser records.</p></div>
 <div class="feature"><h3>Cloud quote history</h3><p>Access your customer and quote records across phone, tablet and computer.</p></div>
@@ -160,7 +160,7 @@ function vals(){
 }
 const sessionId=(()=>{let x=localStorage.getItem('wq_session_id');if(!x){x=crypto.randomUUID();localStorage.setItem('wq_session_id',x)}return x})();
 const attribution=(()=>{const q=new URLSearchParams(location.search),get=k=>(q.get(k)||'').trim().slice(0,120);let a=JSON.parse(localStorage.getItem('wq_attribution')||'null');const next={source:get('utm_source')||a?.source||'',medium:get('utm_medium')||a?.medium||'',campaign:get('utm_campaign')||a?.campaign||''};if(next.source||next.medium||next.campaign)localStorage.setItem('wq_attribution',JSON.stringify(next));return next})();
-function track(event_name){fetch('/api'+'/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_name,page:location.pathname,session_id:sessionId,...attribution})}).catch(()=>{})}
+function track(event_name){fetch('https://washquote.business-0f3.workers.dev/api/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_name,page:location.pathname,session_id:sessionId,...attribution})}).catch(()=>{})}
 function calculate(){
  const x=vals(); document.getElementById('min').textContent=money(x.base); document.getElementById('quotePrice').textContent=money(x.rec);
  document.getElementById('cost').textContent=money(x.base); document.getElementById('profit').textContent=money(x.profit); document.getElementById('profitMargin').textContent=x.pm.toFixed(1)+'%';
@@ -233,7 +233,7 @@ function saveQuote(){
 const pricingIds=ids.filter(id=>id!=='customer');
 function savePreset(){localStorage.setItem('washquote_preset',JSON.stringify(Object.fromEntries(pricingIds.map(id=>[id,document.getElementById(id).value]))));document.getElementById('status').textContent='Pricing preset saved on this device. Customer details were not included.'}
 function loadPreset(){const p=JSON.parse(localStorage.getItem('washquote_preset')||'null');if(!p)return document.getElementById('status').textContent='No preset saved yet.';pricingIds.forEach(id=>{if(p[id]!==undefined)document.getElementById(id).value=p[id]});calculate();document.getElementById('status').textContent='Pricing preset loaded. Current customer stays unchanged.'}
-function updateTarget(){const target=n('monthlyTarget'),profit=vals().profit;const el=document.getElementById('jobsTarget');el.textContent=profit>0?Math.ceil(target/profit)+' jobs':'Calculate a quote first'}
+function updateTarget(){return}
 async function copyText(text){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);return true}const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch(e){return false}}
 async function shareSetup(){const data=Object.fromEntries(pricingIds.map(id=>[id,document.getElementById(id).value]));const url=location.origin+location.pathname+'#setup='+btoa(unescape(encodeURIComponent(JSON.stringify(data))));const ok=await copyText(url);document.getElementById('status').textContent=ok?'Setup link copied. Customer details were not included.':'Could not copy the setup link. Copy the URL from the address bar after opening it.';track('quote_saved')}
 function restoreSetup(){if(!location.hash.startsWith('#setup='))return;try{const data=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(7)))));pricingIds.forEach(id=>{if(data[id]!==undefined)document.getElementById(id).value=data[id]})}catch(e){}}
@@ -278,7 +278,7 @@ function restoreQuote(id){
 }
 async function joinPro(e){
  e.preventDefault(); const status=document.getElementById('status'); status.textContent='Joining…';
- try{const r=await fetch('/api'+'/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
+ try{const r=await fetch('https://washquote.business-0f3.workers.dev/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
  catch(err){status.textContent=err.message||'Please try again.';}
 }
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
