@@ -167,32 +167,47 @@ function calculate(){
  updateTarget();
  track('calculator_used');
 }
+function buildQuoteText(){
+ const x=vals();
+ return 'PRESSURE WASHING QUOTE\\n\\nService: '+x.type+'\\nEstimated time: '+x.h+' hours\\n\\nTotal: '+money(x.rec)+'\\n\\nThis estimate covers the service described above. Final price may vary if job conditions differ materially from the information provided.\\n\\nThank you for your business!';
+}
+function showActionStatus(message){
+ const el=document.getElementById('status');
+ if(el){el.textContent=message;el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
 function makeQuote(){
- const x=vals(); document.getElementById('quoteText').textContent='PRESSURE WASHING QUOTE\n\nService: '+x.type+'\nEstimated time: '+x.h+' hours\n\nTotal: '+money(x.rec)+'\n\nThis estimate covers the service described above. Final price may vary if job conditions differ materially from the information provided.\n\nThank you for your business!';
- calculate(); track('quote_generated');
+ const text=buildQuoteText();
+ document.getElementById('quoteText').textContent=text;
+ calculate();
+ track('quote_generated');
+ return text;
 }
 async function copyQuote(){
- makeQuote();
- const text=document.getElementById('quoteText').textContent;
+ const text=makeQuote();
  try{
-  if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);}
-  else{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');ta.remove();}
+  if(navigator.clipboard && window.isSecureContext){
+   await navigator.clipboard.writeText(text);
+  }else{
+   const ta=document.createElement('textarea');
+   ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.left='-9999px';
+   document.body.appendChild(ta);ta.select();
+   if(!document.execCommand('copy')) throw new Error('copy failed');
+   ta.remove();
+  }
   const btn=document.getElementById('copyBtn');
-  if(btn){btn.textContent='✓ Copied!';setTimeout(()=>{btn.textContent='Copy quote';},1800);}
-  document.getElementById('status').textContent='Quote copied to clipboard.';
+  if(btn){btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy quote',1800);}
+  showActionStatus('Quote copied to clipboard.');
  }catch(e){
   const btn=document.getElementById('copyBtn');
-  if(btn){btn.textContent='Copy failed';setTimeout(()=>{btn.textContent='Copy quote';},1800);}
-  document.getElementById('status').textContent='Copy failed. Select the quote text and copy it manually.';
+  if(btn){btn.textContent='Copy failed';setTimeout(()=>btn.textContent='Copy quote',1800);}
+  showActionStatus('Copy failed. You can select the quote text below and copy it manually.');
  }
 }
-function customerMessage(){
- makeQuote();
- return document.getElementById('quoteText').textContent;
-}
+function customerMessage(){return makeQuote();}
 function sendWhatsApp(){
  const text=encodeURIComponent(customerMessage());
- window.open('https://wa.me/?text='+text,'_blank','noopener');
+ const url='https://wa.me/?text='+text;
+ window.location.href=url;
 }
 function sendEmail(){
  const text=encodeURIComponent(customerMessage());
@@ -204,13 +219,13 @@ function sendSMS(){
  window.location.href='sms:?body='+text;
 }
 function printQuote(){
- makeQuote();
+ const text=makeQuote();
  const x=vals();
  const print=document.getElementById('printDocument');
  if(print){
-  print.innerHTML='<div class="printBrand">WASHQUOTE</div><div class="printTitle">PRESSURE WASHING QUOTE</div><div class="printMeta"><b>Service:</b> '+x.type+'<br><b>Estimated time:</b> '+x.h+' hours</div><div class="printTotal">Total: '+money(x.rec)+'</div><div class="printBody">This estimate covers the service described above. Final price may vary if job conditions differ materially from the information provided.\n\nThank you for your business!</div><div class="printFooter">Prepared with WashQuote · Planning estimate</div>';
+  print.innerHTML='<div class="printBrand">WASHQUOTE</div><div class="printTitle">PRESSURE WASHING QUOTE</div><div class="printMeta"><b>Service:</b> '+x.type+'<br><b>Estimated time:</b> '+x.h+' hours</div><div class="printTotal">Total: '+money(x.rec)+'</div><div class="printBody">'+escapeHTML(text)+'</div><div class="printFooter">Prepared with WashQuote · Planning estimate</div>';
  }
- setTimeout(()=>window.print(),50);
+ setTimeout(()=>window.print(),100);
 }
 let loadedQuoteId=null;
 function saveQuote(){
