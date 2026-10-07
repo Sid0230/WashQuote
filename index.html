@@ -45,7 +45,7 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 <body>
 <main class="wrap">
 <section class="hero">
-<div class="brand">WASHQUOTE</div>
+<div class="brand">WASHQUOTE <span style="font-weight:650;color:var(--muted);font-size:13px;letter-spacing:0">by Swarivo</span></div>
 <h1>Price pressure washing jobs with confidence.</h1>
 <p>Calculate your real job cost, protect your target margin, and create a customer-ready quote in seconds. Built for pressure washing businesses worldwide.</p>
 <nav class="topnav"><a class="pill" href="#calculator">Calculator</a><a class="pill" href="#features">Features</a><a class="pill" href="#faq">FAQ</a><a class="pill" href="/pro/">See Pro</a></nav>
@@ -223,7 +223,7 @@ function printQuote(){
  const x=vals();
  const print=document.getElementById('printDocument');
  if(print){
-  print.innerHTML='<div class="printBrand">WASHQUOTE</div><div class="printTitle">PRESSURE WASHING QUOTE</div><div class="printMeta"><b>Service:</b> '+x.type+'<br><b>Estimated time:</b> '+x.h+' hours</div><div class="printTotal">Total: '+money(x.rec)+'</div><div class="printBody">'+escapeHTML(text)+'</div><div class="printFooter">Prepared with WashQuote · Planning estimate</div>';
+  print.innerHTML='<div class="printBrand">WASHQUOTE <span style="font-size:13px;font-weight:600;color:#667085;letter-spacing:0">by Swarivo</span></div><div class="printTitle">PRESSURE WASHING QUOTE</div><div class="printMeta"><b>Service:</b> '+x.type+'<br><b>Estimated time:</b> '+x.h+' hours</div><div class="printTotal">Total: '+money(x.rec)+'</div><div class="printBody">'+escapeHTML(text)+'</div><div class="printFooter">Prepared with WashQuote by Swarivo · Planning estimate</div>';
  }
  setTimeout(()=>window.print(),100);
 }
