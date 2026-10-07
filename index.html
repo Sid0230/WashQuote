@@ -169,7 +169,7 @@ function calculate(){
 }
 function buildQuoteText(){
  const x=vals();
- return 'PRESSURE WASHING QUOTE\\n\\nService: '+x.type+'\\nEstimated time: '+x.h+' hours\\n\\nTotal: '+money(x.rec)+'\\n\\nThis estimate covers the service described above. Final price may vary if job conditions differ materially from the information provided.\\n\\nThank you for your business!';
+ return 'PRESSURE WASHING QUOTE\n\nService: '+x.type+'\nEstimated time: '+x.h+' hours\n\nTotal: '+money(x.rec)+'\n\nThis estimate covers the service described above. Final price may vary if job conditions differ materially from the information provided.\n\nThank you for your business!';
 }
 function showActionStatus(message){
  const el=document.getElementById('status');
