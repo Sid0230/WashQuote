@@ -12,9 +12,10 @@
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#dfe4ec;--accent:#1769e0;--accent2:#0f4fac;--good:#087443;--soft:#eef3fb;--danger:#b42318}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
-.wrap{max-width:1120px;margin:auto;padding:24px 18px 70px}.hero{padding:34px 0 24px}.brand{font-weight:850;letter-spacing:.04em;font-size:20px;color:var(--accent)}
-h1{font-size:clamp(34px,6vw,60px);line-height:1.02;letter-spacing:-.05em;margin:16px 0 12px;max-width:800px}.hero p{font-size:18px;color:var(--muted);max-width:760px;line-height:1.55}
-.topnav{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.pill{padding:9px 12px;border:1px solid var(--line);border-radius:99px;background:#fff;color:var(--muted);font-size:13px;text-decoration:none}
+.wrap{max-width:1180px;margin:auto;padding:0 24px 80px}.siteHeader{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:20px}.brandLockup{display:flex;align-items:baseline;gap:7px;text-decoration:none}.brand{font-weight:900;letter-spacing:.035em;font-size:20px;color:var(--ink)}.byline{font-size:12px;font-weight:700;color:var(--muted)}
+.topnav{display:flex;align-items:center;gap:22px}.navlink{color:var(--muted);font-size:13px;font-weight:700;text-decoration:none}.navlink:hover,.navlink.active{color:var(--ink)}.navlink.proNav{padding:9px 13px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--accent)}
+.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:64px;align-items:center;padding:76px 0 72px}.heroCopy{max-width:700px}.eyebrow{display:inline-block;font-size:11px;font-weight:850;letter-spacing:.12em;color:var(--accent);margin-bottom:18px}.hero h1{font-size:clamp(42px,6vw,72px);line-height:.98;letter-spacing:-.055em;margin:0 0 20px;max-width:720px}.hero h1 span{color:var(--accent)}.hero p{font-size:19px;color:var(--muted);max-width:650px;line-height:1.55;margin:0}.heroActions{display:flex;align-items:center;gap:20px;margin-top:30px}.heroBtn{display:inline-flex;align-items:center;gap:16px;background:var(--accent);color:#fff;text-decoration:none;padding:14px 18px;border-radius:10px;font-weight:800;box-shadow:0 8px 22px rgba(23,105,224,.18)}.heroBtn span{font-size:18px}.heroTextLink{color:var(--ink);font-weight:750;text-decoration:none}.trustRow{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--muted);font-size:12px;font-weight:650}.heroCard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 20px 55px rgba(20,30,50,.09);max-width:420px;justify-self:end}.heroCardTop{font-size:10px;letter-spacing:.1em;font-weight:850;color:var(--muted);display:flex;align-items:center;gap:7px}.liveDot{width:7px;height:7px;border-radius:50%;background:#12b76a;display:inline-block}.heroPrice{display:flex;justify-content:space-between;align-items:end;padding:32px 0 20px}.heroPrice span,.heroMini span{font-size:12px;color:var(--muted)}.heroPrice strong{font-size:34px;letter-spacing:-.04em}.heroMini{display:grid;grid-template-columns:1fr 1fr;gap:10px}.heroMini div{padding:13px;border-radius:10px;background:var(--bg)}.heroMini b{display:block;margin-top:4px;font-size:16px}.heroBar{height:7px;background:#edf1f6;border-radius:99px;margin:18px 0;overflow:hidden}.heroBar span{display:block;height:100%;background:var(--accent);border-radius:99px}.heroCard p{font-size:12px!important;line-height:1.5!important;margin:0!important}
+@media(max-width:820px){.siteHeader{height:auto;padding:18px 0}.topnav{gap:12px}.navlink:not(.proNav){display:none}.hero{grid-template-columns:1fr;gap:30px;padding:48px 0}.heroCard{justify-self:stretch;max-width:none}}
 .grid{display:grid;grid-template-columns:1.12fr .88fr;gap:18px}@media(max-width:820px){.grid{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 30px rgba(20,30,50,.05)}
 h2{margin:0 0 18px;font-size:21px}h3{margin:0 0 8px;font-size:17px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.row{grid-template-columns:1fr}}
@@ -40,20 +41,35 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
  #printDocument .printBody{white-space:pre-wrap;font-size:15px;line-height:1.7}
  #printDocument .printFooter{margin-top:30px;padding-top:14px;border-top:1px solid #ddd;font-size:12px;color:#667085}
 }
-</style>
+
+.sectionEyebrow{font-size:10px;font-weight:850;letter-spacing:.1em;color:var(--accent);margin-bottom:7px}.sectionIntro{margin:-8px 0 18px;color:var(--muted);font-size:13px;line-height:1.5}.printable{position:relative}.printable:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);border-radius:18px 18px 0 0}</style>
 </head>
 <body>
 <main class="wrap">
+<header class="siteHeader">
+<a class="brandLockup" href="/" aria-label="WashQuote home"><span class="brand">WASHQUOTE</span><span class="byline">by Swarivo</span></a>
+<nav class="topnav"><a class="navlink active" href="#calculator">Calculator</a><a class="navlink" href="#features">How it works</a><a class="navlink" href="#faq">FAQ</a><a class="navlink proNav" href="/pro/">WashQuote Pro</a></nav>
+</header>
 <section class="hero">
-<div class="brand">WASHQUOTE <span style="font-weight:650;color:var(--muted);font-size:13px;letter-spacing:0">by Swarivo</span></div>
-<h1>Price pressure washing jobs with confidence.</h1>
-<p>Calculate your real job cost, protect your target margin, and create a customer-ready quote in seconds. Built for pressure washing businesses worldwide.</p>
-<nav class="topnav"><a class="pill" href="#calculator">Calculator</a><a class="pill" href="#features">Features</a><a class="pill" href="#faq">FAQ</a><a class="pill" href="/pro/">See Pro</a></nav>
+<div class="heroCopy">
+<span class="eyebrow">PRESSURE WASHING QUOTE SOFTWARE</span>
+<h1>Know your cost.<br><span>Protect your margin.</span></h1>
+<p>Build accurate pressure washing quotes in seconds — with labor, materials, travel, overhead and your target profit included.</p>
+<div class="heroActions"><a class="heroBtn" href="#calculator">Start calculating <span>→</span></a><a class="heroTextLink" href="#features">See how it works</a></div>
+<div class="trustRow"><span>✓ 12 currencies</span><span>✓ Customer-ready quotes</span><span>✓ Built for service businesses</span></div>
+</div>
+<div class="heroCard">
+<div class="heroCardTop"><span class="liveDot"></span><span>LIVE PRICING ENGINE</span></div>
+<div class="heroPrice"><span>Recommended quote</span><strong>₹8,450</strong></div>
+<div class="heroMini"><div><span>Job cost</span><b>₹5,915</b></div><div><span>Target margin</span><b>30%</b></div></div>
+<div class="heroBar"><span style="width:70%"></span></div>
+<p>Calculate the price that protects your business — not just the price that wins the job.</p>
+</div>
 </section>
 
 <div class="grid" id="calculator">
 <section class="card" id="calculatorForm">
-<h2>Job pricing calculator</h2>
+<div class="sectionEyebrow">STEP 1 · PRICE THE JOB</div><h2>Build your quote</h2><p class="sectionIntro">Enter your real job costs. WashQuote calculates the price you need to hit your target margin.</p>
 <div class="row">
 <div class="field"><label>Customer name / job reference</label><input id="customer" type="text" maxlength="80" placeholder="e.g. John Smith or 14 Oak St"><div class="small">Used to keep saved quotes separated between customers.</div></div>
 <div class="field"><label>Currency</label><select id="cur"><option value="USD|$">USD — US Dollar ($)</option><option value="EUR|€">EUR — Euro (€)</option><option value="GBP|£">GBP — British Pound (£)</option><option value="CAD|C$">CAD — Canadian Dollar (C$)</option><option value="AUD|A$">AUD — Australian Dollar (A$)</option><option value="NZD|NZ$">NZD — New Zealand Dollar (NZ$)</option><option value="INR|₹">INR — Indian Rupee (₹)</option><option value="SGD|S$">SGD — Singapore Dollar (S$)</option><option value="AED|د.إ">AED — UAE Dirham (د.إ)</option><option value="ZAR|R">ZAR — South African Rand (R)</option><option value="CHF|CHF">CHF — Swiss Franc (CHF)</option><option value="JPY|¥">JPY — Japanese Yen (¥)</option></select></div>
@@ -83,7 +99,7 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 </section>
 
 <section class="card printable">
-<span class="badge">Instant calculation</span><h2>Your numbers</h2>
+<span class="badge">STEP 2 · REVIEW</span><h2>Your pricing</h2><p class="sectionIntro">Review your break-even price, recommended quote and expected profit.</p>
 <div class="results">
 <div class="metric"><div class="k">Recommended customer quote</div><div class="v primary" id="quotePrice">$0.00</div></div>
 <div class="metric"><div class="k">Break-even price (before target margin)</div><div class="v" id="min">$0.00</div></div>
