@@ -280,38 +280,43 @@ async function joinPro(e){
  try{const r=await fetch('https://washquote.business-0f3.workers.dev/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('email').value,need:'pricing'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not join');status.textContent='You’re on the Pro beta list.';document.getElementById('email').value='';track('pro_interest');}
  catch(err){status.textContent=err.message||'Please try again.';}
 }
-ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));document.getElementById('monthlyTarget').addEventListener('input',updateTarget);restoreSetup();renderHistory();calculate();updateTarget();
+ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));restoreSetup();renderHistory();calculate();updateTarget();
 </script>
 </body></htmlfunction restoreQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
  const x=arr.find(a=>a.id===id);
  if(!x)return;
+
  loadedQuoteId=x.id;
 
  if(x.inputs){
   ids.forEach(id=>{
-   if(x.inputs[id]!==undefined) document.getElementById(id).value=x.inputs[id];
+   const el=document.getElementById(id);
+   if(el && x.inputs[id]!==undefined) el.value=x.inputs[id];
   });
  }else{
   document.getElementById('customer').value=x.customer||'';
-  document.getElementById('type').value=x.type;
+  document.getElementById('type').value=x.type||'Driveway cleaning';
   document.getElementById('cur').value=x.currencyCode
    ? x.currencyCode+'|'+x.currency
-   : (Array.from(document.getElementById('cur').options).find(o=>o.value.endsWith('|'+x.currency))?.value||document.getElementById('cur').value);
-  document.getElementById('hours').value=x.hours;
+   : document.getElementById('cur').value;
+  document.getElementById('hours').value=x.hours||1;
  }
 
  calculate();
  makeQuote();
 
  const saveBtn=document.getElementById('saveQuoteBtn');
- if(saveBtn)saveBtn.textContent='Update saved quote';
+ if(saveBtn) saveBtn.textContent='Update saved quote';
 
- // Return to the actual calculator form, not the results/history section.
- const calculatorForm=document.getElementById('calculatorForm');
- if(calculatorForm){
-  const top=calculatorForm.getBoundingClientRect().top+window.scrollY-16;
-  window.scrollTo(0,top);
+ const form=document.getElementById('calculatorForm');
+ if(form){
+  requestAnimationFrame(()=>{
+   requestAnimationFrame(()=>{
+    const top=form.getBoundingClientRect().top+window.scrollY-12;
+    window.scrollTo({top:top,left:0,behavior:'smooth'});
+   });
+  });
  }
 
  document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
