@@ -1,9 +1,13 @@
 import { db } from "hatchable";
 
 export const access = "public";
-export const methods = ["POST"];
+export const methods = ["POST", "OPTIONS"];
 
 export default async function (req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  if (req.method === "OPTIONS") return res.status(204).end();
   const allowed = new Set([
     "calculator_used","quote_generated","quote_saved","pro_interest","pro_page_viewed","purchase_intent","price_interest_19","pro_value_choice",
     "pro_workspace_opened","pro_activated","service_saved","package_saved","template_saved",
