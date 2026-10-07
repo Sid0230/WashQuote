@@ -173,7 +173,7 @@ function buildQuoteText(){
 }
 function showActionStatus(message){
  const el=document.getElementById('status');
- if(el){el.textContent=message;el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+ if(el){el.textContent=message;}
 }
 function makeQuote(){
  const text=buildQuoteText();
@@ -272,23 +272,7 @@ function newQuote(){
  document.getElementById('quoteText').textContent='Your customer-ready quote will appear here.';
  calculate(); updateTarget();
  document.getElementById('status').textContent='New quote ready.';
- setTimeout(()=>{const target=document.getElementById('calculator');if(target){const top=target.getBoundingClientRect().top+window.pageYOffset-18;window.scrollTo({top,behavior:'smooth'});setTimeout(()=>{const first=document.getElementById('customer');if(first)first.focus({preventScroll:true});},450);}},80);
-}
-function restoreQuote(id){
- const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]'),x=arr.find(a=>a.id===id); if(!x)return;
- loadedQuoteId=x.id;
- if(x.inputs){
-  ids.forEach(id=>{if(x.inputs[id]!==undefined)document.getElementById(id).value=x.inputs[id]});
- }else{
-  document.getElementById('customer').value=x.customer||'';
-  document.getElementById('type').value=x.type;
-  document.getElementById('cur').value=x.currencyCode?x.currencyCode+'|'+x.currency:(Array.from(document.getElementById('cur').options).find(o=>o.value.endsWith('|'+x.currency))?.value||document.getElementById('cur').value);
-  document.getElementById('hours').value=x.hours;
- }
- calculate(); makeQuote(); updateTarget();
- const saveBtn=document.getElementById('saveQuoteBtn');
- if(saveBtn)saveBtn.textContent='Update saved quote';
- setTimeout(()=>{const target=document.getElementById('calculator');if(target){const top=target.getBoundingClientRect().top+window.pageYOffset-20;window.scrollTo(0,top);}},100);
+ setTimeout(()=>{const target=document.getElementById('calculator');if(target){const top=target.getBoundingClientRect().top+window.pageYOffset-20;window.scrollTo({top:top,behavior:'auto'});}},100);
  document.getElementById('status').textContent='Saved quote loaded. Edit the calculator and press Update saved quote.';
 }
 async function joinPro(e){
