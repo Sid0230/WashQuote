@@ -5,4 +5,4 @@ compatibility_date = "2026-10-07"
 [[d1_databases]]
 binding = "DB"
 database_name = "washquote"
-database_id = "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
+database_id = "b522668a-b565-4ff8-9c34-38a4c7bc1900"
