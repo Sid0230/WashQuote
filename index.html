@@ -265,7 +265,7 @@ function renderHistory(){
 }
 function deleteQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
- localStorage.setItem('washquote_history',JSON.stringify(arr.filter(x=>x.id!==id)));
+ localStorage.setItem('washquote_history',JSON.stringify(arr.filter(x=>String(x.id)!==String(id))));
  if(loadedQuoteId===id){loadedQuoteId=null;const saveBtn=document.getElementById('saveQuoteBtn');if(saveBtn)saveBtn.textContent='Save quote';}
  renderHistory();
  document.getElementById('status').textContent='Saved quote deleted.';
@@ -300,7 +300,7 @@ ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate))
 }
 function restoreQuote(id){
  const arr=JSON.parse(localStorage.getItem('washquote_history')||'[]');
- const x=arr.find(a=>a.id===id);
+ const x=arr.find(a=>String(a.id)===String(id));
  if(!x)return;
 
  loadedQuoteId=x.id;
