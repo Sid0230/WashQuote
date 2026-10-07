@@ -1,0 +1,1 @@
+ALTER TABLE product_events ADD COLUMN session_id text;
