@@ -119,12 +119,12 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 <div class="metric"><div class="k">Estimated profit</div><div class="v profit" id="profit">$0.00</div></div>
 <div class="metric"><div class="k">Profit margin</div><div class="v" id="profitMargin">0%</div></div>
 </div>
-<div class="actionSection"><div class="actionLabel">Quote actions</div><div class="actions"><button id="generateQuoteBtn" class="secondary" type="button">Generate quote</button><button id="saveQuoteBtn" class="primaryAction" type="button">Save quote</button></div><button id="newQuoteBtn" class="newQuoteAction" style="width:100%;margin-top:10px" type="button">＋ New quote</button></div>
-<div class="actionSection"><div class="actionLabel">Copy & export</div><div class="actions"><button id="copyBtn" class="secondary" type="button">Copy quote</button><button id="printQuoteBtn" class="secondary" type="button">Print / PDF</button></div></div>
-<div class="actionSection"><div class="actionLabel">Send to customer</div><div class="actions"><button id="whatsappBtn" class="secondary" type="button">WhatsApp</button><button id="emailBtn" class="secondary" type="button">Email</button></div><button id="smsBtn" class="secondary" style="width:50%;margin-top:10px" type="button">SMS</button></div>
+<div class="actionSection"><div class="actionLabel">Starter · $9/month</div><div class="notice" style="margin-top:0">The calculator is free. Customer-ready quoting, saving and sending are Starter features.</div><div class="actions"><button id="generateQuoteBtn" class="primaryAction" type="button">Create customer quote</button><button id="saveQuoteBtn" class="primaryAction" type="button">Save quote</button></div><button id="newQuoteBtn" class="newQuoteAction" style="width:100%;margin-top:10px" type="button">＋ New quote</button></div>
+<div class="actionSection"><div class="actionLabel">Starter tools</div><div class="actions"><button id="copyBtn" class="secondary" type="button">Copy quote</button><button id="printQuoteBtn" class="secondary" type="button">Print / PDF</button></div></div>
+<div class="actionSection"><div class="actionLabel">Send to customer · Starter</div><div class="actions"><button id="whatsappBtn" class="secondary" type="button">WhatsApp</button><button id="emailBtn" class="secondary" type="button">Email</button></div><button id="smsBtn" class="secondary" style="width:50%;margin-top:10px" type="button">SMS</button></div>
 <div class="quote" id="quoteText">Your customer-ready quote will appear here.</div>
 <div class="notice">Planning estimate only. Check local taxes, fees, insurance, permits and business costs before sending a final price.</div>
-<div id="historyWrap" class="section"><h3>Saved quotes</h3><div id="history" class="history"><div class="small">No saved quotes yet.</div></div></div>
+<div id="historyWrap" class="section"><h3>Saved quotes · Starter</h3><div id="history" class="history"><div class="small">Unlock Starter to save and manage private quotes.</div></div></div>
 </section>
 </div>
 
@@ -168,13 +168,13 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 <div class="faq"><h3>How should I price a pressure washing job?</h3><p>Start with your complete job cost, set your target profit margin, and use the result as your starting quote. Always consider local market conditions, job difficulty and your minimum charge.</p></div>
 <div class="faq"><h3>What does WashQuote calculate?</h3><p>WashQuote factors in labor, materials, travel, other job costs, overhead, target margin and applicable fees to help you create a customer-ready quote.</p></div>
 <div class="faq"><h3>Can I use WashQuote for different pressure washing services?</h3><p>Yes. Use it for driveways, house washing, roof washing, decks/patios, commercial work and other services.</p></div>
-<div class="faq"><h3>Is WashQuote free?</h3><p>WashQuote is a paid product. Starter is currently being validated at <b>$9/month or $79/year</b>, while Pro adds customer management, repeat quoting, quote pipeline and business analytics.</p></div>
+<div class="faq"><h3>Is WashQuote free?</h3><p>The core calculator is free. <b>Starter is $9/month or $79/year</b> for customer-ready quotes, saving, cloud history and sending. Pro adds customer management, repeat quoting, quote pipeline and business analytics.</p></div>
 <div class="faq"><h3>What is the difference between Starter and Pro?</h3><p><b>Starter = calculate, quote and send.</b> Pro = manage customers, repeat work and the business behind the quotes.</p></div>
 <div class="faq"><h3>Does WashQuote guarantee the right price?</h3><p>No. It is a pricing and planning tool. Your final price should account for your local market, site conditions, regulations and actual business costs.</p></div>
 </div>
 </section>
 <section class="section"><div class="card" style="text-align:center"><h2>Ready to price your next job?</h2><p class="small">Use WashQuote Starter to calculate your costs, protect your margin and create a customer-ready quote.</p><div class="actions"><button class="btn" onclick="document.getElementById('calculator').scrollIntoView({behavior:'smooth'})">Start with Starter</button><button class="secondary" onclick="location.href='/pro/'">See WashQuote Pro</button></div></div></section>
-<div class="footer">WashQuote is a planning tool for pressure washing businesses. Starter and Pro are paid products; checkout is being validated before launch. Saved quotes are stored in your current browser.</div>
+<div class="footer">WashQuote is a planning tool for pressure washing businesses. The calculator is free; Starter and Pro are paid products. Paid access is required for customer-ready quoting and saved quote management.</div>
 <div id="printDocument" class="printDocument" aria-hidden="true"></div>
 </main>
 <script>
@@ -182,10 +182,13 @@ const SUPABASE_URL='https://espxcjuruenfjnniqada.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_JzPWuS2VSucOsw5OwgI11Q_ffgC1yF4';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 let currentUser=null,authMode='signin';
+let starterActive=false;
 function authStatus(t){document.getElementById('authStatus').textContent=t||''}
 function openAuth(mode='signin'){authMode=mode;document.getElementById('authPanel').style.display='flex';document.getElementById('authTitle').textContent=mode==='signup'?'Create account':'Sign in';document.getElementById('authSubmit').textContent=mode==='signup'?'Create account':'Sign in';document.getElementById('authToggle').textContent=mode==='signup'?'Back to sign in':'Create account';authStatus('')}
 function closeAuth(){document.getElementById('authPanel').style.display='none';authStatus('')}
-function renderAccountBar(){const el=document.getElementById('accountBar');if(!el)return;if(currentUser){el.innerHTML='<span class="small">Signed in as <b>'+escapeHTML(currentUser.email||'account')+'</b></span><button id="signOutBtn" type="button">Sign out</button>';document.getElementById('signOutBtn').onclick=()=>supabaseClient.auth.signOut()}else{el.innerHTML='<span class="small">Saved quotes are private to your account.</span><button id="signInBtn" type="button">Sign in</button>';document.getElementById('signInBtn').onclick=()=>openAuth('signin')}}
+function renderAccountBar(){const el=document.getElementById('accountBar');if(!el)return;if(currentUser){el.innerHTML='<span class="small">Signed in as <b>'+escapeHTML(currentUser.email||'account')+'</b>'+(starterActive?' · Starter active':' · Free account')+'</span><button id="signOutBtn" type="button">Sign out</button>';document.getElementById('signOutBtn').onclick=()=>supabaseClient.auth.signOut()}else{el.innerHTML='<span class="small">Free calculator · Starter unlocks quoting</span><button id="signInBtn" type="button">Sign in</button>';document.getElementById('signInBtn').onclick=()=>openAuth('signin')}}
+function requireStarter(){if(starterActive)return true;showActionStatus('Starter is required for customer-ready quotes, saving, export and sending.');if(!currentUser)openAuth('signin');else showActionStatus('Your account is signed in, but Starter is not active yet.');track('purchase_intent');return false}
+function applyEntitlementUI(){document.getElementById('historyWrap').style.display=starterActive?'block':'none';['generateQuoteBtn','saveQuoteBtn','copyBtn','printQuoteBtn','whatsappBtn','emailBtn','smsBtn'].forEach(id=>{const b=document.getElementById(id);if(b){b.title=starterActive?'Starter feature':'Starter required'}})}
 async function migrateLocalQuotes(){if(!currentUser)return;const local=JSON.parse(localStorage.getItem(WQ_QUOTES_KEY)||'[]');if(!local.length)return;const {data:existing}=await supabaseClient.from('quotes').select('quote_data').eq('user_id',currentUser.id);const keys=new Set((existing||[]).map(x=>String(x.quote_data?.local_id||'')));const rows=local.filter(q=>!keys.has(String(q.id))).map(q=>({user_id:currentUser.id,customer_name:q.customer||'',job_reference:q.type||'',quote_data:{...q,local_id:q.id}}));if(rows.length)await supabaseClient.from('quotes').insert(rows)}
 async function syncCloudQuotes(){if(!currentUser)return;await migrateLocalQuotes();const {data,error}=await supabaseClient.from('quotes').select('*').order('created_at',{ascending:false}).limit(50);if(error){showActionStatus('Could not load cloud quotes. Check your Supabase table/RLS.');return}localStorage.setItem(WQ_QUOTES_KEY,JSON.stringify((data||[]).map(r=>r.quote_data).filter(Boolean)));renderHistory()}
 async function saveCloudQuote(q){if(!currentUser)return false;const {error}=await supabaseClient.from('quotes').insert({user_id:currentUser.id,customer_name:q.customer||'',job_reference:q.type||'',quote_data:{...q,local_id:q.id}});if(error){showActionStatus('Cloud save failed. Please try again.');return false}return true}
@@ -216,6 +219,7 @@ function showActionStatus(message){
  if(el){el.textContent=message;}
 }
 function makeQuote(){
+ if(!requireStarter()) return '';
  const text=buildQuoteText();
  document.getElementById('quoteText').textContent=text;
  calculate();
@@ -223,6 +227,7 @@ function makeQuote(){
  return text;
 }
 async function copyQuote(){
+ if(!requireStarter()) return;
  const text=makeQuote();
  try{
   if(navigator.clipboard && window.isSecureContext){
@@ -245,20 +250,24 @@ async function copyQuote(){
 }
 function customerMessage(){return makeQuote();}
 function sendWhatsApp(){
+ if(!requireStarter()) return;
  const text=encodeURIComponent(customerMessage());
  const url='https://wa.me/?text='+text;
  window.location.href=url;
 }
 function sendEmail(){
+ if(!requireStarter()) return;
  const text=encodeURIComponent(customerMessage());
  const subject=encodeURIComponent('Pressure washing quote');
  window.location.href='mailto:?subject='+subject+'&body='+text;
 }
 function sendSMS(){
+ if(!requireStarter()) return;
  const text=encodeURIComponent(customerMessage());
  window.location.href='sms:?body='+text;
 }
 function printQuote(){
+ if(!requireStarter()) return;
  const text=makeQuote();
  const x=vals();
  const print=document.getElementById('printDocument');
@@ -278,6 +287,7 @@ const WQ_QUOTES_KEY='washquote_history_'+WQ_WORKSPACE_ID;
 const WQ_PRESET_KEY='washquote_preset_'+WQ_WORKSPACE_ID;
 let loadedQuoteId=null;
 async function saveQuote(){
+ if(!requireStarter()) return;
  const x=vals(); const inputs=Object.fromEntries(ids.map(id=>[id,document.getElementById(id).value]));
  if(!currentUser){showActionStatus('Sign in to save private cloud quotes.');openAuth('signin');return;}
  const arr=JSON.parse(localStorage.getItem(WQ_QUOTES_KEY)||'[]');
@@ -304,6 +314,7 @@ async function shareSetup(){const data=Object.fromEntries(pricingIds.map(id=>[id
 function restoreSetup(){if(!location.hash.startsWith('#setup='))return;try{const data=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(7)))));pricingIds.forEach(id=>{if(data[id]!==undefined)document.getElementById(id).value=data[id]})}catch(e){}}
 function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function renderHistory(){
+ if(!starterActive){document.getElementById('history').innerHTML='<div class="small">Unlock Starter to save and manage private quotes.</div>';return;}
  const arr=JSON.parse(localStorage.getItem(WQ_QUOTES_KEY)||'[]');
  const el=document.getElementById('history');
  if(!arr.length){
@@ -323,6 +334,7 @@ function renderHistory(){
  });
 }
 async function deleteQuote(id){
+ if(!requireStarter()) return;
  const arr=JSON.parse(localStorage.getItem(WQ_QUOTES_KEY)||'[]');
  if(!currentUser){showActionStatus('Sign in to manage private saved quotes.');openAuth('signin');return;}
  await deleteCloudQuote(id);
@@ -386,7 +398,7 @@ document.getElementById('whatsappBtn').addEventListener('click',sendWhatsApp);
 document.getElementById('emailBtn').addEventListener('click',sendEmail);
 document.getElementById('smsBtn').addEventListener('click',sendSMS);
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calculate));
-restoreSetup();renderHistory();calculate();updateTarget();
+restoreSetup();applyEntitlementUI();renderHistory();calculate();updateTarget();
 document.getElementById('authClose').onclick=closeAuth;
 document.getElementById('authToggle').onclick=()=>openAuth(authMode==='signup'?'signin':'signup');
 document.getElementById('authPanel').onclick=e=>{if(e.target.id==='authPanel')closeAuth()};
@@ -399,7 +411,7 @@ document.getElementById('authSubmit').onclick=async()=>{
  if(authMode==='signup'&&!r.data.session){authStatus('Account created. Check your email to confirm it, then sign in.');return}
  closeAuth()
 };
-supabaseClient.auth.onAuthStateChange(async(_event,session)=>{currentUser=session?.user||null;renderAccountBar();if(currentUser){await syncCloudQuotes();showActionStatus('Signed in. Your quotes are private to your account.')}});
-supabaseClient.auth.getSession().then(async({data})=>{currentUser=data.session?.user||null;renderAccountBar();if(currentUser)await syncCloudQuotes()});
+supabaseClient.auth.onAuthStateChange(async(_event,session)=>{currentUser=session?.user||null;starterActive=false;renderAccountBar();applyEntitlementUI();if(currentUser){showActionStatus('Signed in. Starter access is not active on this account yet.');}});
+supabaseClient.auth.getSession().then(async({data})=>{currentUser=data.session?.user||null;starterActive=false;renderAccountBar();applyEntitlementUI()});
 </script>
 </body></html>
