@@ -95,6 +95,62 @@ async function rateLimit(env,request,route,limit,windowSeconds){
   return true;
 }
 
+
+// --- Stripe subscription entitlement layer ---
+const STRIPE_API="https://api.stripe.com/v1";
+const STARTER_PRICES={
+  month:"price_1UOF7MHO7zYntAPdyjdYNti0",
+  year:"price_1UOF7OHO7zYntAPd3lU0jxNq"
+};
+
+function bearer(request){
+  const h=request.headers.get("Authorization")||"";
+  return h.startsWith("Bearer ")?h.slice(7):"";
+}
+async function supabaseUser(env,token){
+  if(!token) return null;
+  const r=await fetch(env.SUPABASE_URL+"/auth/v1/user",{
+    headers:{apikey:env.SUPABASE_PUBLISHABLE_KEY,Authorization:"Bearer "+token}
+  });
+  if(!r.ok) return null;
+  return await r.json();
+}
+async function stripeRequest(env,path,params){
+  const body=new URLSearchParams();
+  for(const [k,v] of Object.entries(params||{})) body.set(k,String(v));
+  const r=await fetch(STRIPE_API+path,{
+    method:"POST",
+    headers:{Authorization:"Bearer "+env.STRIPE_SECRET_KEY,"Content-Type":"application/x-www-form-urlencoded"},
+    body
+  });
+  const data=await r.json();
+  if(!r.ok) throw new Error(data?.error?.message||"Stripe request failed");
+  return data;
+}
+async function getEntitlement(env,userId){
+  return await env.DB.prepare("SELECT starter_active,subscription_id FROM entitlements WHERE user_id=?").bind(userId).first();
+}
+async function setEntitlement(env,userId,active,subscriptionId="",customerId=""){
+  await env.DB.prepare(
+    "INSERT INTO entitlements (user_id,starter_active,subscription_id,stripe_customer_id,updated_at) VALUES (?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(user_id) DO UPDATE SET starter_active=excluded.starter_active,subscription_id=excluded.subscription_id,stripe_customer_id=excluded.stripe_customer_id,updated_at=CURRENT_TIMESTAMP"
+  ).bind(userId,active?1:0,subscriptionId,customerId).run();
+}
+function timingSafeEqual(a,b){
+  if(a.length!==b.length) return false;
+  let x=0; for(let i=0;i<a.length;i++) x|=a.charCodeAt(i)^b.charCodeAt(i);
+  return x===0;
+}
+function hex(bytes){return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,"0")).join("")}
+async function verifyStripeSignature(payload,header,secret){
+  const parts=Object.fromEntries(header.split(",").map(x=>x.split("=")));
+  const ts=parts.t, sig=parts.v1;
+  if(!ts||!sig) return false;
+  if(Math.abs(Math.floor(Date.now()/1000)-Number(ts))>300) return false;
+  const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+  const mac=await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(ts+"."+payload));
+  return timingSafeEqual(hex(mac),sig);
+}
+
 const allowedEvents=new Set(["calculator_used","quote_generated","quote_saved","pro_interest","pro_page_viewed","purchase_intent","price_interest_19","pro_value_choice","pro_workspace_opened","pro_activated","service_saved","package_saved","template_saved","target_calculated","pro_quote_saved"]);
 
 export default {async fetch(request,env){
@@ -125,13 +181,73 @@ export default {async fetch(request,env){
       return json({ok:true,url:session.url},200,origin);
     }catch(e){return json({ok:false,error:e.message||"Could not start checkout."},502,origin)}
   }
-  if(url.pathname!=="/api/event" && url.pathname!=="/api/waitlist") return json({ok:false,error:"Not found"},404,origin);
+  if(url.pathname!=="/api/event" && url.pathname!=="/api/waitlist" && url.pathname!=="/api/entitlement" && url.pathname!=="/api/create-checkout" && url.pathname!=="/api/stripe-webhook") return json({ok:false,error:"Not found"},404,origin);
+  if(url.pathname==="/api/stripe-webhook"){
   if(request.method!=="POST") return json({ok:false,error:"Method not allowed"},405,origin);
+  const raw=await request.text();
+  const sig=request.headers.get("Stripe-Signature")||"";
+  if(!await verifyStripeSignature(raw,sig,env.STRIPE_WEBHOOK_SECRET)) return json({ok:false,error:"Invalid webhook signature"},400,origin);
+  const event=JSON.parse(raw);
+  const obj=event.data?.object||{};
+  if(event.type==="checkout.session.completed"){
+    const uid=obj.metadata?.supabase_user_id;
+    if(uid && obj.mode==="subscription"){
+      await setEntitlement(env,uid,true,obj.subscription||"",obj.customer||"");
+    }
+  }else if(event.type==="customer.subscription.deleted" || event.type==="customer.subscription.paused"){
+    const uid=obj.metadata?.supabase_user_id;
+    if(uid) await setEntitlement(env,uid,false,obj.id,obj.customer||"");
+  }else if(event.type==="customer.subscription.updated"){
+    const uid=obj.metadata?.supabase_user_id;
+    if(uid){
+      const active=["active","trialing"].includes(obj.status) && obj.cancel_at_period_end!==true;
+      await setEntitlement(env,uid,active,obj.id,obj.customer||"");
+    }
+  }else if(event.type==="invoice.payment_failed"){
+    const uid=obj.subscription_details?.metadata?.supabase_user_id || obj.metadata?.supabase_user_id;
+    if(uid) await setEntitlement(env,uid,false,obj.subscription||"",obj.customer||"");
+  }
+  return json({received:true},200,origin);
+}
+if(request.method!=="POST" && url.pathname!=="/api/entitlement") return json({ok:false,error:"Method not allowed"},405,origin);
+if(url.pathname==="/api/entitlement"){
+  const user=await supabaseUser(env,bearer(request));
+  if(!user?.id) return json({ok:false,error:"Unauthorized"},401,origin);
+  const row=await getEntitlement(env,user.id);
+  return json({starterActive:Boolean(row?.starter_active),subscriptionId:row?.subscription_id||null},200,origin);
+}
+if(url.pathname==="/api/create-checkout"){
+  if(!(await rateLimit(env,request,"checkout",10,3600))) return json({ok:false,error:"Too many checkout attempts. Try again later."},429,origin);
+  const user=await supabaseUser(env,bearer(request));
+  if(!user?.id) return json({ok:false,error:"Unauthorized"},401,origin);
+  const existing=await getEntitlement(env,user.id);
+  if(existing?.starter_active) return json({ok:false,error:"Starter is already active."},409,origin);
+  let body; try{body=await request.json()}catch{return json({ok:false,error:"Invalid JSON"},400,origin);}
+  const interval=body.interval==="year"?"year":"month";
+  const price=STARTER_PRICES[interval];
+  try{
+    const session=await stripeRequest(env,"/checkout/sessions",{
+      mode:"subscription",
+      "line_items[0][price]":price,
+      "line_items[0][quantity]":"1",
+      success_url:"https://washquote.swarivo.in/?checkout=success&session_id={CHECKOUT_SESSION_ID}",
+      cancel_url:"https://washquote.swarivo.in/?checkout=cancel",
+      "customer_email":user.email||"",
+      "metadata[supabase_user_id]":user.id,
+      "metadata[plan]":"starter",
+      "subscription_data[metadata][supabase_user_id]":user.id,
+      "subscription_data[metadata][plan]":"starter"
+    });
+    return json({ok:true,url:session.url},200,origin);
+  }catch(e){return json({ok:false,error:e.message||"Could not create checkout"},500,origin);}
+}
+
   const contentType=request.headers.get("content-type")||"";
   if(!contentType.toLowerCase().includes("application/json")) return json({ok:false,error:"JSON required"},415,origin);
   const length=Number(request.headers.get("content-length")||"0");
   if(length>12000) return json({ok:false,error:"Request too large"},413,origin);
   await ensureSchema(env);
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS entitlements (user_id TEXT PRIMARY KEY, starter_active INTEGER NOT NULL DEFAULT 0, subscription_id TEXT, stripe_customer_id TEXT, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)").run();
 
   if(url.pathname==="/api/event" && !(await rateLimit(env,request,"event",120,60))) return json({ok:false,error:"Rate limit exceeded. Try again shortly."},429,origin);
   if(url.pathname==="/api/waitlist" && !(await rateLimit(env,request,"waitlist",5,3600))) return json({ok:false,error:"Too many requests. Try again later."},429,origin);
