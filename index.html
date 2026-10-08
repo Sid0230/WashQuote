@@ -407,7 +407,7 @@ document.getElementById('authSubmit').onclick=async()=>{
  const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
  if(!email||password.length<6){authStatus('Enter an email and password of at least 6 characters.');return}
  authStatus(authMode==='signup'?'Creating account…':'Signing in…');
- const r=authMode==='signup'?await supabaseClient.auth.signUp({email,password}):await supabaseClient.auth.signInWithPassword({email,password});
+ const r=authMode==='signup'?await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}}):await supabaseClient.auth.signInWithPassword({email,password});
  if(r.error){authStatus(r.error.message);return}
  if(authMode==='signup'&&!r.data.session){authStatus('Account created. Check your email to confirm it, then sign in.');return}
  closeAuth()
