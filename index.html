@@ -111,7 +111,7 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 </section>
 
 <section class="card printable">
-<span class="badge">STEP 2 · REVIEW</span><h2>Your pricing</h2><p class="sectionIntro">Review your break-even price, recommended quote and expected profit.</p>
+<span class="badge">FREE · CALCULATE MY QUOTE</span><h2>Your pricing</h2><p class="sectionIntro">Your calculation results are free. Customer-ready quoting and all actions below require Starter.</p>
 <div class="results">
 <div class="metric"><div class="k">Recommended customer quote</div><div class="v primary" id="quotePrice">$0.00</div></div>
 <div class="metric"><div class="k">Break-even price (before target margin)</div><div class="v" id="min">$0.00</div></div>
@@ -119,7 +119,7 @@ button{border:0;border-radius:10px;padding:13px 16px;font-weight:750;font:inheri
 <div class="metric"><div class="k">Estimated profit</div><div class="v profit" id="profit">$0.00</div></div>
 <div class="metric"><div class="k">Profit margin</div><div class="v" id="profitMargin">0%</div></div>
 </div>
-<div class="actionSection"><div class="actionLabel">Starter · $9/month</div><div class="notice" style="margin-top:0">The calculator is free. Customer-ready quoting, saving and sending are Starter features.</div><div class="actions"><button id="generateQuoteBtn" class="primaryAction" type="button">Create customer quote</button><button id="saveQuoteBtn" class="primaryAction" type="button">Save quote</button></div><button id="newQuoteBtn" class="newQuoteAction" style="width:100%;margin-top:10px" type="button">＋ New quote</button></div>
+<div class="actionSection"><div class="actionLabel">Starter · $9/month</div><div class="notice" style="margin-top:0">Only <b>Calculate my quote</b> is free. Everything below — customer quotes, saving, export and sending — requires Starter.</div><div class="actions"><button id="generateQuoteBtn" class="primaryAction" type="button">Create customer quote</button><button id="saveQuoteBtn" class="primaryAction" type="button">Save quote</button></div><button id="newQuoteBtn" class="newQuoteAction" style="width:100%;margin-top:10px" type="button">＋ New quote · Starter</button></div>
 <div class="actionSection"><div class="actionLabel">Starter tools</div><div class="actions"><button id="copyBtn" class="secondary" type="button">Copy quote</button><button id="printQuoteBtn" class="secondary" type="button">Print / PDF</button></div></div>
 <div class="actionSection"><div class="actionLabel">Send to customer · Starter</div><div class="actions"><button id="whatsappBtn" class="secondary" type="button">WhatsApp</button><button id="emailBtn" class="secondary" type="button">Email</button></div><button id="smsBtn" class="secondary" style="width:50%;margin-top:10px" type="button">SMS</button></div>
 <div class="quote" id="quoteText">Your customer-ready quote will appear here.</div>
@@ -344,6 +344,7 @@ async function deleteQuote(id){
  document.getElementById('status').textContent='Saved quote deleted.';
 }
 function newQuote(){
+ if(!requireStarter()) return;
  loadedQuoteId=null;
  ids.forEach(id=>document.getElementById(id).value=id==='cur'?'USD|$':id==='type'?'Driveway cleaning':id==='hours'?'1':id==='workers'?'1':id==='labor'?'0':id==='materials'?'0':id==='travel'?'0':id==='other'?'0':id==='overhead'?'0':id==='margin'?'30':id==='fee'?'0':id==='minimum'?'0':document.getElementById(id).value);
  document.getElementById('customer').value='';
